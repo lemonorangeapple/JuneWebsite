@@ -1,0 +1,17 @@
+.breadcrumb {
+    display: block;
+}
+
+.breadcrumb .link {
+    color: var(--color-base-content);
+    text-decoration: none;
+}
+
+.breadcrumb .link:hover {
+    text-decoration: underline;
+}
+
+.breadcrumb .breadcrumbs {
+    overflow-x: auto;
+    white-space: nowrap;
+}

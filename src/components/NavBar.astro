@@ -1,0 +1,58 @@
+---
+import "../assets/NavBar.css";
+const { frontmatter, url } = Astro.props;
+---
+
+<div
+    id="breadcrumb-root"
+    class="breadcrumb fixed left-3 top-3 z-50 max-w-[calc(100vw-1.5rem)] sm:left-4 sm:top-4 sm:max-w-[calc(100vw-2rem)]"
+    data-current-url={url}
+    aria-label="Breadcrumb"
+>
+</div>
+
+<script is:inline>
+    const root = document.getElementById("breadcrumb-root");
+
+    if (root) {
+        const pathname = window.location.pathname;
+        const parts = pathname.split("/").filter(Boolean);
+
+        const crumbs = [{ label: "/", href: "/" }];
+        let path = "";
+
+        for (const part of parts) {
+            path += `/${part}`;
+            crumbs.push({
+                label: decodeURIComponent(part),
+                href: `${path}/`,
+            });
+        }
+
+        const wrapper = document.createElement("div");
+        wrapper.className = "breadcrumbs rounded-box bg-base-100/80 px-3 py-2 text-sm shadow-sm backdrop-blur";
+
+        const list = document.createElement("ul");
+        list.className = "text-sm";
+
+        crumbs.forEach((crumb, index) => {
+            const li = document.createElement("li");
+            if (index === crumbs.length - 1) {
+                const span = document.createElement("span");
+                span.className = "opacity-70";
+                span.textContent = crumb.label;
+                li.append(span);
+            } else {
+                const a = document.createElement("a");
+                a.className = "link link-hover";
+                a.href = crumb.href;
+                a.textContent = crumb.label;
+                li.append(a);
+            }
+            list.append(li);
+        });
+
+        wrapper.append(list);
+        root.replaceChildren(wrapper);
+    }
+</script>

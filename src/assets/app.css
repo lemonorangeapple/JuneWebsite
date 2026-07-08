@@ -1,2 +1,136 @@
 @import "tailwindcss";
 @plugin "daisyui";
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    margin: 0;
+    min-height: 100vh;
+    overflow-x: hidden;
+}
+
+main {
+    width: 100%;
+}
+
+/* Card related */
+.card-body {
+    border-radius: 20px;
+    background-color: var(--color-base-200);
+    gap: 1rem;
+}
+
+.card {
+    border-radius: 20px;
+}
+
+/* Typography */
+span {
+    font-style: italic;
+    font-size: small;
+}
+
+h1 {
+    font-size: clamp(1.75rem, 4vw, 2.5rem);
+    font-weight: bold;
+}
+
+h2 {
+    font-size: clamp(1.4rem, 3vw, 2rem);
+    font-weight: bold;
+}
+
+h3 {
+    font-size: clamp(1.2rem, 2.4vw, 1.5rem);
+    font-weight: bold;
+}
+
+h4 {
+    font-size: clamp(1.1rem, 2vw, 1.25rem);
+    font-weight: bold;
+}
+
+h5 {
+    font-size: 1rem;
+    font-weight: bold;
+}
+
+p {
+    font-size: 1rem;
+    line-height: 1.75;
+}
+
+.post-content {
+    width: 100%;
+    max-width: 100%;
+    overflow-wrap: anywhere;
+}
+
+.post-content > :first-child {
+    margin-top: 0;
+}
+
+.post-content > :last-child {
+    margin-bottom: 0;
+}
+
+.post-content img,
+.post-content iframe,
+.post-content table,
+.post-content pre {
+    width: 100%;
+}
+
+.post-content table {
+    display: block;
+    overflow-x: auto;
+}
+
+img,
+video,
+table {
+    max-width: 100%;
+}
+
+pre {
+    overflow-x: auto;
+}
+
+/* Link style */
+a {
+    color: var(--color-info);
+    text-decoration: underline;
+}
+
+a.btn {
+    color: var(--color-base-content);
+    text-decoration: none;
+}
+
+/* Code block style */
+.astro-code {
+    border-radius: 7px;
+    padding: 0.75rem 0.9rem;
+    overflow-x: auto;
+}
+
+code {
+    border-radius: 7px;
+}
+
+p code {
+    background-color: #24292e;
+    color: var(--color-primary-content);
+    margin: 0 0.25rem;
+    padding: 0 0.35rem;
+    word-break: break-word;
+}
+
+/* Self Custom */
+.center {
+    justify-items: center;
+    align-items: center;
+    text-align: center;
+}

@@ -1,17 +1,79 @@
 ---
-
+import "../assets/app.css";
+import "../assets/index.css";
+import { Icon } from 'astro-icon/components';
+import Head from "../components/Head.astro";
+import Card from "../components/Card.astro";
+import NavBar from "../components/NavBar.astro";
 ---
 
-<html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<link rel="icon" href="/favicon.ico" />
-		<meta name="viewport" content="width=device-width" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Astro</title>
-	</head>
-	<body>
-		<h1>Astro</h1>
-	</body>
-</html>
+<Head />
+<NavBar />
+<Card>
+    <div class="center">
+        <img
+            src="https://dl.imjcj.eu.org/avatar.xmini.jpg"
+            width="64"
+            height="64"
+            id="avatar"
+        />
+        <h2 class="mt-1">June_qwq</h2>
+        <p class="slogan mt-2"><code class="center">(self || self = new Self())</code></p>
+        <p class="mt-2">熟悉全栈开发、C++数据结构、Qt开发等</p>
+    </div>
+    <script is:inline>
+        const box = document.getElementById("avatar");
+
+        let currentAngle = 0; // 当前旋转角度
+        const baseSpeed = 0.7; // ⭐ 平时匀速旋转的基础速度（度/帧）
+        let currentSpeed = baseSpeed; // 当前实际速度
+        const acceleration = 0.002; // 鼠标悬停时的加速度
+        const deceleration = 0.05; // 鼠标移开时的减速度（让回落更平滑）
+        let isHovering = false; // 鼠标是否悬停
+        let animationId = null; // 动画循环ID
+
+        // 动画渲染函数
+        function animate() {
+            if (isHovering) {
+                currentSpeed += acceleration;
+            } else {
+                // 鼠标移开：速度逐渐减小，直到回落至基础速度
+                if (currentSpeed > baseSpeed) {
+                    currentSpeed -= deceleration;
+                } else {
+                    currentSpeed = baseSpeed; // 确保不会低于基础速度
+                }
+            }
+
+            // 累加旋转角度
+            currentAngle += currentSpeed;
+            box.style.transform = `rotate(${currentAngle % 360}deg)`;
+
+            // 因为平时也要转，所以动画循环永远不需要停止
+            animationId = requestAnimationFrame(animate);
+        }
+
+        // 鼠标进入：触发加速
+        box.addEventListener("mouseenter", () => {
+            isHovering = true;
+        });
+
+        // 鼠标离开：触发减速
+        box.addEventListener("mouseleave", () => {
+            isHovering = false;
+        });
+
+        // ⭐ 页面加载时直接启动动画循环
+        animate();
+    </script>
+</Card>
+
+<Card>
+    <div class="center">
+        <div class="w-2/5 grid grid-cols-3 gap-3">
+            <a class="btn btn-outline" href="/posts"><Icon name="material-symbols:article-outline" />文章总览</a>
+            <a class="btn btn-outline" href="/posts/tags"><Icon name="mdi:tag-outline" />文章标签</a>
+            <a class="btn btn-outline" href="/posts/topic"><Icon name="material-symbols:menu-rounded" />文章专栏</a>
+        </div>
+    </div>
+</Card>

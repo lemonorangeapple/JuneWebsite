@@ -1,0 +1,58 @@
+---
+import "../../assets/app.css";
+import "../../assets/PostList.css";
+import Head from "../../components/Head.astro";
+import Card from "../../components/Card.astro";
+import Navbar from "../../components/NavBar.astro";
+
+const posts = Object.entries(import.meta.glob("../posts/*.md", { eager: true }))
+    .map(([path, module]) => {
+        const { frontmatter, url } = module as {
+            frontmatter: {
+                title?: string;
+                date?: string;
+                description?: string;
+                topic?: string;
+                tags?: string[];
+            };
+            url?: string;
+        };
+
+        return {
+            path,
+            title: frontmatter.title ?? path.split("/").pop() ?? path,
+            date: frontmatter.date ?? "",
+            description: frontmatter.description ?? "",
+            topic: frontmatter.topic ?? "",
+            tags: frontmatter.tags ?? [],
+            url: url ?? path.replace("./posts", "../posts").replace(/\.md$/, "/"),
+        };
+    })
+    .sort((a, b) => b.date.localeCompare(a.date));
+---
+
+<Head />
+<Navbar />
+<Card>
+    <h1 class="card-title">文章</h1>
+    <div class="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
+        {posts.map((post) => (
+            <a
+                href={post.url}
+                class="rounded-xl border border-base-content/10 p-4 transition hover:border-primary hover:shadow-md"
+            >
+                <div class="text-sm opacity-70">{post.date}</div>
+                <div class="mt-2 text-lg font-semibold">{post.title}</div>
+                {post.topic && <div class="mt-2 text-xs opacity-70">主题：{post.topic}</div>}
+                {post.tags.length > 0 && (
+                    <div class="mt-3 flex flex-wrap gap-2">
+                        {post.tags.map((tag) => (
+                            <span class="rounded-full bg-base-200 px-2 py-1 text-xs">{tag}</span>
+                        ))}
+                    </div>
+                )}
+                {post.description && <p class="mt-2 line-clamp-3 text-sm opacity-75">{post.description}</p>}
+            </a>
+        ))}
+    </div>
+</Card>

@@ -1,0 +1,18 @@
+---
+import "../assets/Comments.css";
+---
+<div class="card-body w-full" id="waline"></div>
+<link
+    rel="stylesheet"
+    href="https://api.imjcj.eu.org/cdn.jsdelivr.net/npm/@waline/client@v3/dist/waline.css"
+/>
+<script type="module">
+    import { init } from "https://api.imjcj.eu.org/cdn.jsdelivr.net/npm/@waline/client@v3/dist/waline.js";
+
+    init({
+        el: "#waline",
+        serverURL: "https://waline.imjcj.eu.org",
+        dark: "auto",
+        path: window.location.pathname
+    });
+</script>

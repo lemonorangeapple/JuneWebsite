@@ -1,0 +1,122 @@
+---
+import "../../assets/app.css";
+import "../../assets/PostList.css";
+import Head from "../../components/Head.astro";
+import Card from "../../components/Card.astro";
+import Navbar from "../../components/NavBar.astro";
+
+const posts = Object.entries(import.meta.glob("../posts/*.md", { eager: true }))
+    .map(([path, module]) => {
+        const { frontmatter, url } = module as {
+            frontmatter: {
+                title?: string;
+                date?: string;
+                description?: string;
+                topic?: string;
+                tags?: string[];
+            };
+            url?: string;
+        };
+
+        return {
+            path,
+            title: frontmatter.title ?? path.split("/").pop() ?? path,
+            date: frontmatter.date ?? "",
+            description: frontmatter.description ?? "",
+            topic: frontmatter.topic ?? "",
+            tags: frontmatter.tags ?? [],
+            url: url ?? path.replace("./posts", "../posts").replace(/\.md$/, "/"),
+        };
+    })
+    .sort((a, b) => b.date.localeCompare(a.date));
+
+const tags = [...new Set(posts.flatMap((post) => post.tags))].sort((a, b) => a.localeCompare(b));
+---
+
+<Head />
+<Navbar />
+<Card>
+    <h1 class="card-title">文章标签</h1>
+    <div class="mb-6 flex flex-wrap gap-2">
+        <button
+            type="button"
+            data-tag="all"
+            class="rounded-full border border-primary bg-primary px-4 py-2 text-sm text-primary-content transition"
+        >
+            全部
+        </button>
+        {tags.map((tag) => (
+            <button
+                type="button"
+                data-tag={tag}
+                class="rounded-full border border-base-content/10 px-4 py-2 text-sm transition hover:border-primary"
+            >
+                {tag}
+            </button>
+        ))}
+    </div>
+    <div id="tag-summary" class="mb-4 text-sm opacity-70"></div>
+    <div class="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
+        {posts.map((post) => (
+            <a
+                href={post.url}
+                data-post-tags={post.tags.join(",")}
+                class="rounded-xl border border-base-content/10 p-4 transition hover:border-primary hover:shadow-md"
+            >
+                <div class="text-sm opacity-70">{post.date}</div>
+                <div class="mt-2 text-lg font-semibold">{post.title}</div>
+                {post.tags.length > 0 && (
+                    <div class="mt-3 flex flex-wrap gap-2">
+                        {post.tags.map((tag) => (
+                            <span class="rounded-full bg-base-200 px-2 py-1 text-xs">{tag}</span>
+                        ))}
+                    </div>
+                )}
+                {post.description && <p class="mt-2 line-clamp-3 text-sm opacity-75">{post.description}</p>}
+            </a>
+        ))}
+    </div>
+</Card>
+<script is:inline>
+    const summary = document.getElementById("tag-summary");
+    const tagButtons = Array.from(document.querySelectorAll("[data-tag]"));
+    const postCards = Array.from(document.querySelectorAll("[data-post-tags]"));
+
+    const setActiveButton = (activeTag) => {
+        tagButtons.forEach((button) => {
+            const isActive = activeTag ? button.dataset.tag === activeTag : button.dataset.tag === "all";
+            button.classList.toggle("border-primary", isActive);
+            button.classList.toggle("bg-primary", isActive);
+            button.classList.toggle("text-primary-content", isActive);
+            button.classList.toggle("border-base-content/10", !isActive);
+            button.classList.toggle("hover:border-primary", !isActive);
+        });
+    };
+
+    const applyFilter = (activeTag) => {
+        let visibleCount = 0;
+
+        postCards.forEach((card) => {
+            const tags = card.dataset.postTags ? card.dataset.postTags.split(",").filter(Boolean) : [];
+            const visible = !activeTag || activeTag === "all" || tags.includes(activeTag);
+            card.hidden = !visible;
+            if (visible) visibleCount += 1;
+        });
+
+        if (summary) {
+            summary.textContent = !activeTag || activeTag === "all"
+                ? `共 ${postCards.length} 篇文章`
+                : `当前标签：${activeTag}，共 ${visibleCount} 篇`;
+        }
+
+        setActiveButton(activeTag || "all");
+    };
+
+    tagButtons.forEach((button) => {
+        button.addEventListener("click", () => {
+            applyFilter(button.dataset.tag ?? "all");
+        });
+    });
+
+    applyFilter("all");
+</script>
