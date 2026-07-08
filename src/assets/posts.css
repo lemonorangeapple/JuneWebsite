@@ -1,0 +1,58 @@
+.card-body {
+    background-color: var(--color-base-200);
+}
+
+span {
+    font-style: italic;
+    font-size: small;
+}
+
+h1 {
+    font-size: xx-large;
+    font-weight: bold;
+}
+
+h2 {
+    font-size: x-large;
+    font-weight: bold;
+}
+
+h3 {
+    font-size: large;
+    font-weight: bold;
+}
+
+h4 {
+    font-size: larger;
+    font-weight: bold;
+}
+
+h5 {
+    font-size: medium;
+    font-weight: bold;
+}
+
+p {
+    font-size: medium;
+}
+
+a {
+    color: var(--color-info);
+    text-decoration: underline;
+}
+
+.astro-code {
+    border-radius: 7px;
+    padding-left: 10px;
+    padding-right: 10px;
+    padding-top: 7px;
+    padding-bottom: 7px;
+}
+
+.card-body {
+    border-radius: 20px;
+}
+
+.card {
+    border-radius: 20px;
+}

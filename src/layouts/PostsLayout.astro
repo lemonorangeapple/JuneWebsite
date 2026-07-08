@@ -1,0 +1,35 @@
+---
+import "../assets/app.css";
+import "../assets/posts.css"
+import type { MarkdownLayoutProps } from "astro";
+
+type Props = MarkdownLayoutProps<{
+  title: string;
+  date: string;
+  description: string;
+  topic: string;
+  tags: Array<string>;
+}>;
+
+const { frontmatter, url } = Astro.props;
+---
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta aria-description={frontmatter.description} />
+    <title>{frontmatter.title}</title>
+    <meta id={url} />
+  </head>
+  <body class="items-center place-items-center">
+    <div class="card card-border bg-base-100 w-3/5 my-15">
+      <div class="card-body">
+        <h1 class="card-title">{frontmatter.title}</h1>
+        <span>写于 {frontmatter.date}</span>
+        <p>
+          <slot />
+        </p>
+      </div>
+    </div>
+  </body>
+</html>
