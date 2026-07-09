@@ -35,8 +35,8 @@ import Placeholder from "../components/Placeholder.astro";
         let currentAngle = 0; // 当前旋转角度
         const baseSpeed = 0.7; // ⭐ 平时匀速旋转的基础速度（度/帧）
         let currentSpeed = baseSpeed; // 当前实际速度
-        const acceleration = 0.002; // 鼠标悬停时的加速度
-        const deceleration = 0.05; // 鼠标移开时的减速度（让回落更平滑）
+        const acceleration = -0.005; // 鼠标悬停时的加速度
+        const deceleration = -0.1; // 鼠标移开时的减速度（让回落更平滑）
         let isHovering = false; // 鼠标是否悬停
         let animationId = null; // 动画循环ID
 
