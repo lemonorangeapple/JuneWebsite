@@ -6,6 +6,7 @@ import Katex from "../components/Katex.astro";
 import Card from "../components/Card.astro";
 import Comments from "../components/Comments.astro";
 import Placeholder from "../components/Placeholder.astro";
+import ThemeController from "../components/ThemeController.astro";
 import type { MarkdownLayoutProps } from "astro";
 
 type Props = MarkdownLayoutProps<{
@@ -24,6 +25,7 @@ const { frontmatter, url } = Astro.props;
 <title>{frontmatter.title}</title>
 <Katex />
 <Navbar />
+<ThemeController />
 <Card>
     <h1 class="card-title">{frontmatter.title}</h1>
     <span>写于 {frontmatter.date}</span>

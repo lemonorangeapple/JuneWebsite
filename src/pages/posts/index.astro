@@ -4,6 +4,7 @@ import "../../assets/PostList.css";
 import Head from "../../components/Head.astro";
 import Card from "../../components/Card.astro";
 import Navbar from "../../components/NavBar.astro";
+import ThemeController from "../../components/ThemeController.astro";
 
 const posts = Object.entries(import.meta.glob("../posts/*.md", { eager: true }))
     .map(([path, module]) => {
@@ -33,6 +34,7 @@ const posts = Object.entries(import.meta.glob("../posts/*.md", { eager: true }))
 
 <Head />
 <Navbar />
+<ThemeController />
 <Card>
     <h1 class="card-title">文章</h1>
     <div class="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">

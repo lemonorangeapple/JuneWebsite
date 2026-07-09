@@ -1,0 +1,48 @@
+---
+import { Icon } from 'astro-icon/components';
+---
+
+<label
+    class="swap swap-rotate fixed bottom-3 right-3 z-50 rounded-box bg-base-100/80 px-3 py-3 text-sm shadow-sm backdrop-blur transition-transform duration-200 active:scale-95 sm:bottom-auto sm:right-4 sm:top-4"
+    aria-label="Toggle theme"
+    title="Toggle theme"
+>
+    <input id="theme-controller" type="checkbox" />
+
+    <Icon class="swap-on h-6 w-6 fill-current" name="material-symbols:sunny-outline-rounded" />
+
+    <Icon class="swap-off h-6 w-6 fill-current" name="mdi:moon-and-stars" />
+</label>
+
+<script is:inline>
+    const storageKey = "theme";
+    const checkbox = document.getElementById("theme-controller");
+
+    if (checkbox) {
+        const savedTheme = localStorage.getItem(storageKey);
+        const root = document.documentElement;
+        const systemTheme = window.matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark";
+        const theme = savedTheme === "light" || savedTheme === "dark" ? savedTheme : systemTheme;
+
+        checkbox.checked = theme === "light";
+        root.setAttribute("data-theme", theme);
+
+        const applyTheme = () => {
+            const theme = checkbox.checked ? "light" : "dark";
+            root.setAttribute("data-theme", theme);
+            localStorage.setItem(storageKey, theme);
+        };
+
+        checkbox.addEventListener("change", applyTheme);
+
+        window.matchMedia("(prefers-color-scheme: light)").addEventListener("change", (event) => {
+            if (localStorage.getItem(storageKey)) {
+                return;
+            }
+
+            const theme = event.matches ? "light" : "dark";
+            checkbox.checked = theme === "light";
+            root.setAttribute("data-theme", theme);
+        });
+    }
+</script>
