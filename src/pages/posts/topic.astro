@@ -5,6 +5,8 @@ import Head from "../../components/Head.astro";
 import Card from "../../components/Card.astro";
 import Navbar from "../../components/NavBar.astro";
 import ThemeController from "../../components/ThemeController.astro";
+import SearchModal from "../../components/SearchModal.astro";
+import { Icon } from "astro-icon/components";
 
 const posts = Object.entries(import.meta.glob("../posts/*.md", { eager: true }))
     .map(([path, module]) => {
@@ -38,7 +40,9 @@ const topics = [...new Set(posts.map((post) => post.topic).filter(Boolean))].sor
 <Navbar />
 <ThemeController />
 <Card>
-    <h1 class="card-title">文章主题</h1>
+    <h1 class="card-title">文章专栏</h1>
+    <a class="w-1/5 btn btn-outline" onclick="showModal()"><Icon name="material-symbols:search-rounded" />文章搜索</a>
+    <SearchModal />
     <div class="mb-6 flex flex-wrap gap-2">
         <button
             type="button"

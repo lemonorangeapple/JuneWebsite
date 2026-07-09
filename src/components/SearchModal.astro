@@ -1,0 +1,101 @@
+---
+import { Icon } from 'astro-icon/components';
+import "../assets/SearchModal.css";
+
+const posts = Object.entries(import.meta.glob("../pages/posts/*.md", { eager: true }))
+    .map(([path, module]) => {
+        const { frontmatter, url } = module as {
+            frontmatter: {
+                title?: string;
+                description?: string;
+                topic?: string;
+                tags?: string[];
+            };
+            url?: string;
+        };
+
+        return {
+            title: frontmatter.title ?? path.split("/").pop() ?? path,
+            description: frontmatter.description ?? "",
+            topic: frontmatter.topic ?? "",
+            tags: frontmatter.tags ?? [],
+            url: url ?? path.replace("../pages/posts", "/posts").replace(/\.md$/, "/"),
+        };
+    })
+    .sort((a, b) => a.title.localeCompare(b.title));
+---
+<dialog id="search_modal" class="modal" data-posts={JSON.stringify(posts)}>
+    <div class="modal-box max-w-2xl rounded-xl h-5/8" onclick="document.getElementById('search_input').focus()">
+        <div class="h-1/5">
+            <form method="dialog" class="flex items-center justify-between gap-3">
+                <h3 class="text-lg font-semibold">搜索文章</h3>
+            </form>
+            <input
+                id="search_input"
+                class="input mt-4 w-full rounded-xl"
+                placeholder="搜索文章内容、标签、专栏等"
+                autocomplete="off"
+            />
+        </div>
+        <div id="search_div" class="overflow-y-auto h-4/5">
+            <div id="search_results" class="mt-4 grid gap-3"></div>
+        </div>
+    </div>
+    <form method="dialog" class="modal-backdrop">
+        <button>close</button>
+    </form>
+</dialog>
+
+<script is:inline>
+    const modal = document.getElementById("search_modal");
+    const input = document.getElementById("search_input");
+    const results = document.getElementById("search_results");
+    const div = document.getElementById("search_div");
+    const posts = JSON.parse(modal?.dataset.posts ?? "[]");
+
+    const renderResults = (query) => {
+        if (!results) return;
+
+        const term = query.trim().toLowerCase();
+        const matched = term
+            ? posts.filter((post) => {
+                  const haystack = [post, post.title, post.description, post.topic, ...(post.tags ?? [])]
+                      .join(" ")
+                      .toLowerCase();
+                  return haystack.includes(term);
+              })
+            : posts;
+
+        results.innerHTML =
+            matched
+                .slice(0, 12)
+                .map(
+                    (post) => `
+            <a href="${post.url}" class="rounded-xl border border-base-content/10 p-3 transition list-post hover:shadow-md">
+                <div class="text-sm opacity-70">${post.topic || "文章"}</div>
+                <div class="mt-1 font-semibold">${post.title}</div>
+                ${
+                    post.description
+                        ? `<div class="mt-1 text-sm opacity-75 line-clamp-2">${post.description}</div>`
+                        : ""
+                }
+            </a>
+        `,
+                )
+                .join("") || '<div class="py-8 text-center text-sm opacity-70">无结果</div>';
+    };
+
+    if (input && results) {
+        input.addEventListener("input", (event) => renderResults(event.target.value));
+        modal?.addEventListener("close", () => {
+            input.value = "";
+            renderResults("");
+        });
+        renderResults("");
+    }
+
+    function showModal() {
+        search_modal.showModal();
+        document.getElementById('search_input').focus();
+    }
+</script>

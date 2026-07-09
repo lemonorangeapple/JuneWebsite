@@ -4,7 +4,9 @@ import "../../assets/PostList.css";
 import Head from "../../components/Head.astro";
 import Card from "../../components/Card.astro";
 import Navbar from "../../components/NavBar.astro";
+import { Icon } from 'astro-icon/components';
 import ThemeController from "../../components/ThemeController.astro";
+import SearchModal from "../../components/SearchModal.astro";
 
 const posts = Object.entries(import.meta.glob("../posts/*.md", { eager: true }))
     .map(([path, module]) => {
@@ -39,6 +41,8 @@ const tags = [...new Set(posts.flatMap((post) => post.tags))].sort((a, b) => a.l
 <ThemeController />
 <Card>
     <h1 class="card-title">文章标签</h1>
+    <SearchModal />
+    <a class="w-1/5 btn btn-outline" onclick="showModal()"><Icon name="material-symbols:search-rounded" />文章搜索</a>
     <div class="mb-6 flex flex-wrap gap-2">
         <button
             type="button"

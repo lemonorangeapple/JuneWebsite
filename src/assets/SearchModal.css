@@ -1,0 +1,11 @@
+.modal {
+    border: 0 !important;
+    outline: 0 !important;
+}
+
+#search_input {
+    outline: 0;
+    border: 1px solid;
+    border-color: var(--color-base-content);
+    background-color: var(--color-base-300);
+}
