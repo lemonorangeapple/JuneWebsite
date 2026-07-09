@@ -6,6 +6,7 @@ import Head from "../components/Head.astro";
 import Card from "../components/Card.astro";
 import NavBar from "../components/NavBar.astro";
 import ThemeController from "../components/ThemeController.astro";
+import Placeholder from "../components/Placeholder.astro";
 ---
 
 <Head />
@@ -81,6 +82,12 @@ import ThemeController from "../components/ThemeController.astro";
             <a class="btn btn-outline" href="/posts"><Icon name="material-symbols:article-outline" />文章总览</a>
             <a class="btn btn-outline" href="/posts/tags"><Icon name="mdi:tag-outline" />文章标签</a>
             <a class="btn btn-outline" href="/posts/topic"><Icon name="material-symbols:menu-rounded" />文章专栏</a>
+        </div>
+        <div class="mt-5 w-4/5 grid grid-cols-4 gap-3">
+            <a class="btn btn-outline" href="https://dl.imjcj.eu.org/"><Icon name="material-symbols:folder-outline-rounded" />文件下载</a>
+            <a class="btn btn-outline" href="https://random.imjcj.eu.org/"><Icon name="mdi:account" />学号抽选</a>
+            <a class="btn btn-outline" href="https://cd.imjcj.eu.org/"><Icon name="material-symbols:calendar-today-outline-rounded" />节日计时</a>
+            <a class="btn btn-outline" href="https://up.imjcj.eu.org/share/3ePj6A55BwW8hpId"><Icon name="mdi:graph-box-outline" />统计观察</a>
         </div>
     </div>
 </Card>
