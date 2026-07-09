@@ -136,3 +136,18 @@ p code {
     align-items: center;
     text-align: center;
 }
+
+
+/* Button related */
+.btn {
+    box-shadow: none;
+    text-shadow: none;
+    padding: 0;
+    border-radius: 5rem;
+}
+
+.btn-outline:hover {
+    border-color: var(--color-base-100);
+    background-color: var(--btn-color, var(--color-base-content));
+    color: var(--color-base-100);
+}

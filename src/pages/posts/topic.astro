@@ -43,7 +43,7 @@ const topics = [...new Set(posts.map((post) => post.topic).filter(Boolean))].sor
         <button
             type="button"
             data-topic="all"
-            class="rounded-full border border-primary bg-primary px-4 py-2 text-sm text-primary-content transition"
+            class="rounded-full border border-white list-btn list-btn-active px-4 py-2 text-sm transition"
         >
             全部
         </button>
@@ -51,7 +51,7 @@ const topics = [...new Set(posts.map((post) => post.topic).filter(Boolean))].sor
             <button
                 type="button"
                 data-topic={topic}
-                class="rounded-full border border-base-content/10 px-4 py-2 text-sm transition hover:border-primary"
+                class="rounded-full list-btn border border-base-content/10 px-4 py-2 text-sm transition"
             >
                 {topic}
             </button>
@@ -63,7 +63,7 @@ const topics = [...new Set(posts.map((post) => post.topic).filter(Boolean))].sor
             <a
                 href={post.url}
                 data-post-topic={post.topic}
-                class="rounded-xl border border-base-content/10 p-4 transition hover:border-primary hover:shadow-md"
+                class="rounded-xl border border-base-content/10 p-4 transition list-post hover:shadow-md"
             >
                 <div class="text-sm opacity-70">{post.date}</div>
                 <div class="mt-2 text-lg font-semibold">{post.title}</div>
@@ -88,9 +88,9 @@ const topics = [...new Set(posts.map((post) => post.topic).filter(Boolean))].sor
     const setActiveButton = (activeTopic) => {
         topicButtons.forEach((button) => {
             const isActive = activeTopic ? button.dataset.topic === activeTopic : button.dataset.topic === "all";
-            button.classList.toggle("border-primary", isActive);
-            button.classList.toggle("bg-primary", isActive);
-            button.classList.toggle("text-primary-content", isActive);
+            button.classList.toggle("border-white", isActive);
+            button.classList.toggle("list-btn-active", isActive);
+            button.classList.toggle("text-white-content", isActive);
             button.classList.toggle("border-base-content/10", !isActive);
             button.classList.toggle("hover:border-primary", !isActive);
         });

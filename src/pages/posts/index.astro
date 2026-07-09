@@ -5,6 +5,7 @@ import Head from "../../components/Head.astro";
 import Card from "../../components/Card.astro";
 import Navbar from "../../components/NavBar.astro";
 import ThemeController from "../../components/ThemeController.astro";
+import { Icon } from 'astro-icon/components';
 
 const posts = Object.entries(import.meta.glob("../posts/*.md", { eager: true }))
     .map(([path, module]) => {
@@ -36,12 +37,16 @@ const posts = Object.entries(import.meta.glob("../posts/*.md", { eager: true }))
 <Navbar />
 <ThemeController />
 <Card>
-    <h1 class="card-title">文章</h1>
+    <div class="w-5/8 grid grid-cols-3 gap-3">
+        <h1 class="card-title">文章</h1>
+        <a class="btn btn-outline" href="/posts/tags"><Icon name="mdi:tag-outline" />文章标签</a>
+        <a class="btn btn-outline" href="/posts/topic"><Icon name="material-symbols:menu-rounded" />文章专栏</a>
+    </div>
     <div class="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
         {posts.map((post) => (
             <a
                 href={post.url}
-                class="rounded-xl border border-base-content/10 p-4 transition hover:border-primary hover:shadow-md"
+                class="rounded-xl border border-base-content/10 p-4 transition hover:border-white hover:shadow-md"
             >
                 <div class="text-sm opacity-70">{post.date}</div>
                 <div class="mt-2 text-lg font-semibold">{post.title}</div>

@@ -11,15 +11,3 @@
     cursor: pointer;
     will-change: transform;
 }
-
-.btn {
-    box-shadow: none;
-    text-shadow: none;
-    padding: 0;
-    border-radius: 5rem;
-}
-
-.btn-outline:hover {
-    background-color: var(--btn-color, var(--color-base-content));
-    color: var(--color-base-100);
-}

@@ -2,3 +2,16 @@ a {
     color: var(--color-base-content);
     text-decoration: none;
 }
+
+.list-btn:hover {
+    border-color: var(--color-base-content);
+}
+
+.list-btn-active {
+    color: var(--color-base-100);
+    background-color: var(--color-base-content);
+}
+
+.list-post:hover {
+    border-color: var(--color-base-content);
+}
