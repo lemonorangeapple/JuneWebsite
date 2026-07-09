@@ -5,6 +5,7 @@ a {
 
 .list-btn:hover {
     border-color: var(--color-base-content);
+    cursor: pointer;
 }
 
 .list-btn-active {

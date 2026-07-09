@@ -150,4 +150,5 @@ p code {
     border-color: var(--color-base-100);
     background-color: var(--btn-color, var(--color-base-content));
     color: var(--color-base-100);
+    cursor: pointer;
 }
