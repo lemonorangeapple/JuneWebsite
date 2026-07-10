@@ -1,6 +1,6 @@
 a {
-    color: var(--color-base-content);
-    text-decoration: none;
+    color: var(--color-base-content) !important;
+    text-decoration: none !important;
 }
 
 .list-btn:hover {
