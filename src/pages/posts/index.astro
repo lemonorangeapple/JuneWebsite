@@ -49,7 +49,7 @@ const posts = Object.entries(import.meta.glob("../posts/*.md", { eager: true }))
         {posts.map((post) => (
             <a
                 href={post.url}
-                class="rounded-xl border border-base-content/10 p-4 transition list-post hover:shadow-md"
+                class="post rounded-xl border border-base-content/10 p-4 transition list-post hover:shadow-md"
             >
                 <div class="text-sm opacity-70">{post.date}</div>
                 <div class="mt-2 text-lg font-semibold">{post.title}</div>
