@@ -5,33 +5,7 @@ import Head from "../../components/Head.astro";
 import Card from "../../components/Card.astro";
 import Navbar from "../../components/NavBar.astro";
 import ThemeController from "../../components/ThemeController.astro";
-import SearchModal from "../../components/SearchModal.astro";
-import { Icon } from "astro-icon/components";
-
-const posts = Object.entries(import.meta.glob("../posts/*.md", { eager: true }))
-    .map(([path, module]) => {
-        const { frontmatter, url } = module as {
-            frontmatter: {
-                title?: string;
-                date?: string;
-                description?: string;
-                topic?: string;
-                tags?: string[];
-            };
-            url?: string;
-        };
-
-        return {
-            path,
-            title: frontmatter.title ?? path.split("/").pop() ?? path,
-            date: frontmatter.date ?? "",
-            description: frontmatter.description ?? "",
-            topic: frontmatter.topic ?? "",
-            tags: frontmatter.tags ?? [],
-            url: url ?? path.replace("./posts", "../posts").replace(/\.md$/, "/"),
-        };
-    })
-    .sort((a, b) => b.date.localeCompare(a.date));
+import { posts } from "../../data/posts";
 
 const topics = [...new Set(posts.map((post) => post.topic).filter(Boolean))].sort((a, b) => a.localeCompare(b));
 ---
@@ -41,8 +15,6 @@ const topics = [...new Set(posts.map((post) => post.topic).filter(Boolean))].sor
 <ThemeController />
 <Card>
     <h1 class="card-title">文章专栏</h1>
-    <a class="w-1/5 btn btn-outline" onclick="showModal()"><Icon name="material-symbols:search-rounded" />文章搜索</a>
-    <SearchModal />
     <div class="mb-6 flex flex-wrap gap-2">
         <button
             type="button"

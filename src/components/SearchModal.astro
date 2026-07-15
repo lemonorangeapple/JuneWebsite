@@ -1,30 +1,11 @@
 ---
-import { Icon } from 'astro-icon/components';
 import "../assets/SearchModal.css";
+import "../assets/PostList.css";
+import { posts } from "../data/posts";
 
-const posts = Object.entries(import.meta.glob("../pages/posts/*.md", { eager: true }))
-    .map(([path, module]) => {
-        const { frontmatter, url } = module as {
-            frontmatter: {
-                title?: string;
-                description?: string;
-                topic?: string;
-                tags?: string[];
-            };
-            url?: string;
-        };
-
-        return {
-            title: frontmatter.title ?? path.split("/").pop() ?? path,
-            description: frontmatter.description ?? "",
-            topic: frontmatter.topic ?? "",
-            tags: frontmatter.tags ?? [],
-            url: url ?? path.replace("../pages/posts", "/posts").replace(/\.md$/, "/"),
-        };
-    })
-    .sort((a, b) => a.title.localeCompare(b.title));
+const searchPosts = [...posts].sort((a, b) => a.title.localeCompare(b.title));
 ---
-<dialog id="search_modal" class="modal" data-posts={JSON.stringify(posts)}>
+<dialog id="search_modal" class="modal" data-posts={JSON.stringify(searchPosts)}>
     <div class="modal-box max-w-2xl rounded-xl h-5/8" onclick="document.getElementById('search_input').focus()">
         <div class="h-1/5">
             <form method="dialog" class="flex items-center justify-between gap-3">
@@ -71,7 +52,7 @@ const posts = Object.entries(import.meta.glob("../pages/posts/*.md", { eager: tr
                 .slice(0, 12)
                 .map(
                     (post) => `
-            <a href="${post.url}" class="rounded-xl border border-base-content/10 p-3 transition list-post hover:shadow-md">
+            <a href="${post.url}" class="post rounded-xl border border-base-content/10 p-3 transition list-post hover:shadow-md">
                 <div class="text-sm opacity-70">${post.topic || "文章"}</div>
                 <div class="mt-1 font-semibold">${post.title}</div>
                 ${

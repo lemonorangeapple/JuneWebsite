@@ -7,31 +7,7 @@ import Navbar from "../../components/NavBar.astro";
 import ThemeController from "../../components/ThemeController.astro";
 import { Icon } from 'astro-icon/components';
 import SearchModal from "../../components/SearchModal.astro";
-
-const posts = Object.entries(import.meta.glob("../posts/*.md", { eager: true }))
-    .map(([path, module]) => {
-        const { frontmatter, url } = module as {
-            frontmatter: {
-                title?: string;
-                date?: string;
-                description?: string;
-                topic?: string;
-                tags?: string[];
-            };
-            url?: string;
-        };
-
-        return {
-            path,
-            title: frontmatter.title ?? path.split("/").pop() ?? path,
-            date: frontmatter.date ?? "",
-            description: frontmatter.description ?? "",
-            topic: frontmatter.topic ?? "",
-            tags: frontmatter.tags ?? [],
-            url: url ?? path.replace("./posts", "../posts").replace(/\.md$/, "/"),
-        };
-    })
-    .sort((a, b) => b.date.localeCompare(a.date));
+import { posts } from "../../data/posts";
 ---
 
 <Head />
@@ -39,7 +15,7 @@ const posts = Object.entries(import.meta.glob("../posts/*.md", { eager: true }))
 <ThemeController />
 <Card>
     <h1 class="card-title">文章总览</h1>
-    <div class="w-3/5 grid grid-cols-3 gap-3">
+    <div class="grid w-full grid-cols-1 gap-3 sm:w-3/5 sm:grid-cols-3">
         <a class="btn btn-outline" href="/posts/tags"><Icon name="mdi:tag-outline" />文章标签</a>
         <a class="btn btn-outline" href="/posts/topic"><Icon name="material-symbols:menu-rounded" />文章专栏</a>
         <a class="btn btn-outline" onclick="showModal()"><Icon name="material-symbols:search-rounded" />文章搜索</a>

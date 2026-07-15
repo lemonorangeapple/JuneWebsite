@@ -28,7 +28,7 @@ const { frontmatter, url } = Astro.props;
 <ThemeController />
 <Card>
     <h1 class="card-title">{frontmatter.title}</h1>
-    <span>写于 {frontmatter.date}</span>
+    <span class="post-date">写于 {frontmatter.date}</span>
     <div class="post-content">
         <slot />
     </div>

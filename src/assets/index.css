@@ -5,6 +5,7 @@
 
 #avatar {
     border-radius: 100%;
+    margin-inline: auto;
 }
 
 #avatar:hover {

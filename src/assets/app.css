@@ -29,7 +29,7 @@ main {
 }
 
 /* Typography */
-span {
+.post-date {
     font-style: italic;
     font-size: small;
 }
