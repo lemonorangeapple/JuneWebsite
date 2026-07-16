@@ -38,7 +38,7 @@ import Placeholder from "../components/Placeholder.astro";
             const maxSpeed = 4;
             const acceleration = 0.05;
             const deceleration = 0.08;
-            let currentSpeed = baseSpeed;
+            currentSpeed = baseSpeed;
             let isHovering = false;
             let animationId = 0;
 
@@ -65,12 +65,12 @@ import Placeholder from "../components/Placeholder.astro";
 
 <Card>
     <div class="center">
-        <div class="grid w-full grid-cols-1 gap-3 sm:w-3/5 sm:grid-cols-3">
+        <div class="btn-list grid w-full grid-cols-1 gap-3 sm:grid-cols-3">
             <a class="btn btn-outline" href="/posts"><Icon name="material-symbols:article-outline" />文章总览</a>
             <a class="btn btn-outline" href="/posts/tags"><Icon name="mdi:tag-outline" />文章标签</a>
             <a class="btn btn-outline" href="/posts/topic"><Icon name="material-symbols:menu-rounded" />文章专栏</a>
         </div>
-        <div class="mt-5 grid w-full grid-cols-2 gap-3 sm:w-4/5 sm:grid-cols-4">
+        <div class="btn-list mt-5 grid w-full grid-cols-2 gap-3 sm:grid-cols-4">
             <a class="btn btn-outline" href="https://dl.imjcj.eu.org/"><Icon name="material-symbols:folder-outline-rounded" />文件下载</a>
             <a class="btn btn-outline" href="https://random.imjcj.eu.org/"><Icon name="mdi:account" />学号抽选</a>
             <a class="btn btn-outline" href="https://cd.imjcj.eu.org/"><Icon name="material-symbols:calendar-today-outline-rounded" />节日计时</a>
