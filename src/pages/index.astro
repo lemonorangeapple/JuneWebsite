@@ -35,16 +35,15 @@ import Placeholder from "../components/Placeholder.astro";
         if (box && !window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
             let currentAngle = 0;
             const baseSpeed = 0.7;
-            const maxSpeed = 4;
-            const acceleration = 0.05;
-            const deceleration = 0.08;
+            const acceleration = -0.02;
+            const deceleration = 0.05;
             currentSpeed = baseSpeed;
             let isHovering = false;
             let animationId = 0;
 
             function animate() {
                 currentSpeed = isHovering
-                    ? Math.min(currentSpeed + acceleration, maxSpeed)
+                    ? currentSpeed + acceleration
                     : Math.max(currentSpeed - deceleration, baseSpeed);
                 currentAngle = (currentAngle + currentSpeed) % 360;
                 box.style.transform = `rotate(${currentAngle}deg)`;
