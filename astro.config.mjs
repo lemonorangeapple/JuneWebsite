@@ -26,6 +26,10 @@ function autoPostsLayout() {
         file.data.astro.frontmatter ??= {};
         file.data.astro.frontmatter.layout ??= postsLayout;
 
+        const raw = String(file.value ?? '');
+        file.data.astro.frontmatter.math =
+            /\$\$[\s\S]*?\$\$/.test(raw) || /(?<!\\)\$[^$\n]+(?<!\\)\$/.test(raw);
+
         for (const [key, value] of Object.entries(file.data.astro.frontmatter)) {
             if (key === 'layout') {
                 continue;

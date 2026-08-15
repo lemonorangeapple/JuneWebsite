@@ -15,6 +15,7 @@ type Props = MarkdownLayoutProps<{
     description: string;
     topic: string;
     tags: Array<string>;
+    math?: boolean;
 }>;
 
 const { frontmatter, url } = Astro.props;
@@ -23,7 +24,7 @@ const { frontmatter, url } = Astro.props;
 <Head />
 <meta aria-description={frontmatter.description} />
 <title>{frontmatter.title}</title>
-<Katex />
+{frontmatter.math && <Katex />}
 <Navbar />
 <ThemeController />
 <Card>

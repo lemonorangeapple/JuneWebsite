@@ -1,11 +1,8 @@
 ---
 import "../assets/SearchModal.css";
 import "../assets/PostList.css";
-import { posts } from "../data/posts";
-
-const searchPosts = [...posts].sort((a, b) => a.title.localeCompare(b.title));
 ---
-<dialog id="search_modal" class="modal" data-posts={JSON.stringify(searchPosts)}>
+<dialog id="search_modal" class="modal">
     <div class="modal-box max-w-2xl rounded-xl h-5/8" onclick="document.getElementById('search_input').focus()">
         <div class="h-1/5">
             <form method="dialog" class="flex items-center justify-between gap-3">
@@ -31,27 +28,44 @@ const searchPosts = [...posts].sort((a, b) => a.title.localeCompare(b.title));
     const modal = document.getElementById("search_modal");
     const input = document.getElementById("search_input");
     const results = document.getElementById("search_results");
-    const div = document.getElementById("search_div");
-    const posts = JSON.parse(modal?.dataset.posts ?? "[]");
+
+    let postsCache = null;
+    const loadPosts = () => {
+        if (!postsCache) {
+            postsCache = fetch("/search.json")
+                .then((res) => {
+                    if (!res.ok) {
+                        throw new Error(`搜索数据加载失败 (${res.status})`);
+                    }
+                    return res.json();
+                })
+                .catch((err) => {
+                    console.error(err);
+                    return [];
+                });
+        }
+        return postsCache;
+    };
 
     const renderResults = (query) => {
         if (!results) return;
 
-        const term = query.trim().toLowerCase();
-        const matched = term
-            ? posts.filter((post) => {
-                  const haystack = [post, post.title, post.description, post.topic, ...(post.tags ?? [])]
-                      .join(" ")
-                      .toLowerCase();
-                  return haystack.includes(term);
-              })
-            : posts;
+        loadPosts().then((posts) => {
+            const term = query.trim().toLowerCase();
+            const matched = term
+                ? posts.filter((post) => {
+                      const haystack = [post, post.title, post.description, post.topic, ...(post.tags ?? [])]
+                          .join(" ")
+                          .toLowerCase();
+                      return haystack.includes(term);
+                  })
+                : posts;
 
-        results.innerHTML =
-            matched
-                .slice(0, 12)
-                .map(
-                    (post) => `
+            results.innerHTML =
+                matched
+                    .slice(0, 12)
+                    .map(
+                        (post) => `
             <a href="${post.url}" class="post rounded-xl border border-base-content/10 p-3 transition list-post hover:shadow-md">
                 <div class="text-sm opacity-70">${post.topic || "文章"}</div>
                 <div class="mt-1 font-semibold">${post.title}</div>
@@ -62,21 +76,26 @@ const searchPosts = [...posts].sort((a, b) => a.title.localeCompare(b.title));
                 }
             </a>
         `,
-                )
-                .join("") || '<div class="py-8 text-center text-sm opacity-70">无结果</div>';
+                    )
+                    .join("") || '<div class="py-8 text-center text-sm opacity-70">无结果</div>';
+        });
     };
 
     if (input && results) {
-        input.addEventListener("input", (event) => renderResults(event.target.value));
+        let timer;
+        input.addEventListener("input", (event) => {
+            clearTimeout(timer);
+            timer = setTimeout(() => renderResults(event.target.value), 150);
+        });
         modal?.addEventListener("close", () => {
             input.value = "";
             renderResults("");
         });
-        renderResults("");
     }
 
     function showModal() {
         search_modal.showModal();
-        document.getElementById('search_input').focus();
+        document.getElementById("search_input").focus();
+        renderResults("");
     }
 </script>
