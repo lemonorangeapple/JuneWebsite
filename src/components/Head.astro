@@ -1,5 +1,21 @@
 ---
+const site = Astro.site ?? Astro.url;
+const canonical = new URL(Astro.url.pathname, site).href;
 ---
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="canonical" href={canonical} />
+<link rel="alternate" type="application/rss+xml" title="June_qwq" href={new URL("/rss.xml", site).href} />
+<script is:inline>
+    (function () {
+        const storageKey = "theme";
+        const savedTheme = localStorage.getItem(storageKey);
+        const systemTheme = window.matchMedia("(prefers-color-scheme: light)").matches
+            ? "light"
+            : "dark";
+        const theme =
+            savedTheme === "light" || savedTheme === "dark" ? savedTheme : systemTheme;
+        document.documentElement.setAttribute("data-theme", theme);
+    })();
+</script>
 <script defer src="https://up.imjcj.eu.org/script.js" data-website-id="0cf78362-8244-4e56-8461-593a7f59fd6d"></script>

@@ -100,15 +100,10 @@ pre {
     overflow-x: auto;
 }
 
-/* Link style */
-a {
+/* Link style: only article body, so nav/buttons/cards stay unstyled */
+.post-content a {
     color: var(--color-info);
     text-decoration: underline;
-}
-
-a.btn {
-    color: var(--color-base-content);
-    text-decoration: none;
 }
 
 /* Code block style */

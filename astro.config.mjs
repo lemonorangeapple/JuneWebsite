@@ -4,6 +4,7 @@ import { unified } from '@astrojs/markdown-remark';
 import remarkBreaks from 'remark-breaks';
 import tailwindcss from '@tailwindcss/vite';
 import icon from 'astro-icon';
+import sitemap from '@astrojs/sitemap';
 
 const postsLayout = '../../layouts/PostsLayout.astro';
 
@@ -42,6 +43,7 @@ function autoPostsLayout() {
 
 // https://astro.build/config
 export default defineConfig({
+    site: 'https://www.imjcj.eu.org',
     vite: {
         plugins: [tailwindcss()]
     },
@@ -50,5 +52,7 @@ export default defineConfig({
             remarkPlugins: [remarkBreaks, autoPostsLayout],
         }),
     },
-    integrations: [icon()]
+    integrations: [icon(), sitemap({
+        filter: (page) => !page.includes('/search.json'),
+    })]
 });
