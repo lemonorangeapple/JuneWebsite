@@ -1,12 +1,9 @@
 ---
-import "../assets/app.css";
-import Head from "../components/Head.astro";
-import Navbar from "../components/NavBar.astro";
 import Katex from "../components/Katex.astro";
 import Card from "../components/Card.astro";
 import Comments from "../components/Comments.astro";
 import Placeholder from "../components/Placeholder.astro";
-import ThemeController from "../components/ThemeController.astro";
+import BaseLayout from "./BaseLayout.astro";
 import type { MarkdownLayoutProps } from "astro";
 
 type Props = MarkdownLayoutProps<{
@@ -18,23 +15,20 @@ type Props = MarkdownLayoutProps<{
     math?: boolean;
 }>;
 
-const { frontmatter, url } = Astro.props;
+const { frontmatter } = Astro.props;
 ---
 
-<Head />
-<meta aria-description={frontmatter.description} />
-<title>{frontmatter.title}</title>
-{frontmatter.math && <Katex />}
-<Navbar />
-<ThemeController />
-<Card>
-    <h1 class="card-title">{frontmatter.title}</h1>
-    <span class="post-date">写于 {frontmatter.date}</span>
-    <div class="post-content">
-        <slot />
-    </div>
-</Card>
-<Card>
-    <Comments />
-</Card>
-<Placeholder />
+<BaseLayout title={frontmatter.title} description={frontmatter.description}>
+    {frontmatter.math && <Katex />}
+    <Card>
+        <h1 class="card-title">{frontmatter.title}</h1>
+        <span class="post-date">写于 {frontmatter.date}</span>
+        <div class="post-content">
+            <slot />
+        </div>
+    </Card>
+    <Card>
+        <Comments />
+    </Card>
+    <Placeholder />
+</BaseLayout>

@@ -1,9 +1,20 @@
 ---
+interface Props {
+    title?: string;
+    description?: string;
+}
+
+const { title, description } = Astro.props;
 const site = Astro.site ?? Astro.url;
 const canonical = new URL(Astro.url.pathname, site).href;
 ---
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
+{title && <title>{title}</title>}
+{description && <meta name="description" content={description} />}
+{title && <meta property="og:title" content={title} />}
+{description && <meta property="og:description" content={description} />}
+<meta property="og:type" content="website" />
 <link rel="canonical" href={canonical} />
 <link rel="alternate" type="application/rss+xml" title="June_qwq" href={new URL("/rss.xml", site).href} />
 <script is:inline>

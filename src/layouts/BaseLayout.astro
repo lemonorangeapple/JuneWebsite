@@ -1,0 +1,25 @@
+---
+import "../assets/app.css";
+import Head from "../components/Head.astro";
+import NavBar from "../components/NavBar.astro";
+import ThemeController from "../components/ThemeController.astro";
+
+interface Props {
+    title?: string;
+    description?: string;
+}
+
+const { title, description } = Astro.props;
+---
+
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head>
+        <Head title={title} description={description} />
+    </head>
+    <body>
+        <NavBar />
+        <ThemeController />
+        <slot />
+    </body>
+</html>

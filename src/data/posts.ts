@@ -9,9 +9,18 @@ type PostModule = {
     url?: string;
 };
 
+export type Post = {
+    title: string;
+    date: string;
+    description: string;
+    topic: string;
+    tags: string[];
+    url: string;
+};
+
 const modules = import.meta.glob<PostModule>("../pages/posts/*.md", { eager: true });
 
-export const posts = Object.entries(modules)
+export const posts: Post[] = Object.entries(modules)
     .map(([path, module]) => ({
         title: module.frontmatter.title ?? path.split("/").pop() ?? path,
         date: module.frontmatter.date ?? "",

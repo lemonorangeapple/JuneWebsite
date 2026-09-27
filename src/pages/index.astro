@@ -1,81 +1,76 @@
 ---
-import "../assets/app.css";
+import BaseLayout from "../layouts/BaseLayout.astro";
 import "../assets/index.css";
 import { Icon } from 'astro-icon/components';
-import Head from "../components/Head.astro";
 import Card from "../components/Card.astro";
-import NavBar from "../components/NavBar.astro";
-import ThemeController from "../components/ThemeController.astro";
-import Placeholder from "../components/Placeholder.astro";
 ---
 
-<Head />
-<NavBar />
-<Card>
-    <div class="center">
-        <img
-            src="https://dl.imjcj.eu.org/avatar.xmini.jpg"
-            width="64"
-            height="64"
-            id="avatar"
-        />
-        <h2 class="mt-1">June_qwq</h2>
-        <p class="slogan mt-2"><code class="center">(self || self = new Self())</code></p>
-        <p class="mt-2">熟悉全栈开发、基础运维、C++数据结构、Qt开发等</p>
-    </div>
-    <div class="center">
-        <div class="grid w-full max-w-sm grid-cols-1 gap-3 sm:grid-cols-2">
-            <a class="btn btn-outline" href="https://github.com/lemonorangeapple"><Icon name="mdi:github" />Github</a>
-            <a class="btn btn-outline" href="https://space.bilibili.com/1036201235"><Icon name="mingcute:bilibili-line" />Bilibili</a>
+<BaseLayout title="June_qwq" description="June_qwq 的个人博客，记录全栈开发、基础运维与信奥学习笔记。">
+    <Card>
+        <div class="center">
+            <img
+                src="https://dl.imjcj.eu.org/avatar.xmini.jpg"
+                width="64"
+                height="64"
+                id="avatar"
+                alt="June_qwq 的头像"
+            />
+            <h2 class="mt-1">June_qwq</h2>
+            <p class="slogan mt-2"><code class="center">(self || self = new Self())</code></p>
+            <p class="mt-2">熟悉全栈开发、基础运维、C++数据结构、Qt开发等</p>
         </div>
-    </div>
-    <script is:inline>
-        const box = document.getElementById("avatar");
+        <div class="center">
+            <div class="grid w-full max-w-sm grid-cols-1 gap-3 sm:grid-cols-2">
+                <a class="btn btn-outline" href="https://github.com/lemonorangeapple"><Icon name="mdi:github" />Github</a>
+                <a class="btn btn-outline" href="https://space.bilibili.com/1036201235"><Icon name="mingcute:bilibili-line" />Bilibili</a>
+            </div>
+        </div>
+        <script is:inline>
+            const box = document.getElementById("avatar");
 
-        if (box && !window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-            let currentAngle = 0;
-            const baseSpeed = 0.7;
-            const acceleration = -0.02;
-            const deceleration = 0.05;
-            let currentSpeed = baseSpeed;
-            let isHovering = false;
-            let animationId = 0;
+            if (box && !window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+                let currentAngle = 0;
+                const baseSpeed = 0.7;
+                const acceleration = -0.02;
+                const deceleration = 0.05;
+                let currentSpeed = baseSpeed;
+                let isHovering = false;
+                let animationId = 0;
 
-            function animate() {
-                currentSpeed = isHovering
-                    ? currentSpeed + acceleration
-                    : Math.max(currentSpeed - deceleration, baseSpeed);
-                currentAngle = (currentAngle + currentSpeed) % 360;
-                box.style.transform = `rotate(${currentAngle}deg)`;
-                animationId = requestAnimationFrame(animate);
+                function animate() {
+                    currentSpeed = isHovering
+                        ? currentSpeed + acceleration
+                        : Math.max(currentSpeed - deceleration, baseSpeed);
+                    currentAngle = (currentAngle + currentSpeed) % 360;
+                    box.style.transform = `rotate(${currentAngle}deg)`;
+                    animationId = requestAnimationFrame(animate);
+                }
+
+                box.addEventListener("mouseenter", () => {
+                    isHovering = true;
+                });
+                box.addEventListener("mouseleave", () => {
+                    isHovering = false;
+                });
+                window.addEventListener("pagehide", () => cancelAnimationFrame(animationId), { once: true });
+                animate();
             }
+        </script>
+    </Card>
 
-            box.addEventListener("mouseenter", () => {
-                isHovering = true;
-            });
-            box.addEventListener("mouseleave", () => {
-                isHovering = false;
-            });
-            window.addEventListener("pagehide", () => cancelAnimationFrame(animationId), { once: true });
-            animate();
-        }
-    </script>
-</Card>
-
-<Card>
-    <div class="center">
-        <div class="btn-list grid w-full grid-cols-1 gap-3 sm:grid-cols-3">
-            <a class="btn btn-outline" href="/posts"><Icon name="material-symbols:article-outline" />文章总览</a>
-            <a class="btn btn-outline" href="/posts/tags"><Icon name="mdi:tag-outline" />文章标签</a>
-            <a class="btn btn-outline" href="/posts/topic"><Icon name="material-symbols:menu-rounded" />文章专栏</a>
+    <Card>
+        <div class="center">
+            <div class="btn-list grid w-full grid-cols-1 gap-3 sm:grid-cols-3">
+                <a class="btn btn-outline" href="/posts"><Icon name="material-symbols:article-outline" />文章总览</a>
+                <a class="btn btn-outline" href="/posts/tags"><Icon name="mdi:tag-outline" />文章标签</a>
+                <a class="btn btn-outline" href="/posts/topic"><Icon name="material-symbols:menu-rounded" />文章专栏</a>
+            </div>
+            <div class="btn-list mt-5 grid w-full grid-cols-2 gap-3 sm:grid-cols-4">
+                <a class="btn btn-outline" href="https://dl.imjcj.eu.org/"><Icon name="material-symbols:folder-outline-rounded" />文件下载</a>
+                <a class="btn btn-outline" href="https://random.imjcj.eu.org/"><Icon name="mdi:account" />学号抽选</a>
+                <a class="btn btn-outline" href="https://cd.imjcj.eu.org/"><Icon name="material-symbols:calendar-today-outline-rounded" />节日计时</a>
+                <a class="btn btn-outline" href="https://up.imjcj.eu.org/share/3ePj6A55BwW8hpId"><Icon name="mdi:graph-box-outline" />统计观察</a>
+            </div>
         </div>
-        <div class="btn-list mt-5 grid w-full grid-cols-2 gap-3 sm:grid-cols-4">
-            <a class="btn btn-outline" href="https://dl.imjcj.eu.org/"><Icon name="material-symbols:folder-outline-rounded" />文件下载</a>
-            <a class="btn btn-outline" href="https://random.imjcj.eu.org/"><Icon name="mdi:account" />学号抽选</a>
-            <a class="btn btn-outline" href="https://cd.imjcj.eu.org/"><Icon name="material-symbols:calendar-today-outline-rounded" />节日计时</a>
-            <a class="btn btn-outline" href="https://up.imjcj.eu.org/share/3ePj6A55BwW8hpId"><Icon name="mdi:graph-box-outline" />统计观察</a>
-        </div>
-    </div>
-</Card>
-
-<ThemeController />
+    </Card>
+</BaseLayout>

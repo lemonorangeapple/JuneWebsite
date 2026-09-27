@@ -40,7 +40,7 @@ int main() {
         maxx = max(maxx, a[i]);
     }
     for (int i = 0; i <= maxx; i++) { // 可改变排序类型
-        while (a[i]--) {
+        while (count[i]--) {
             cout << i << ' ';
         }
     }
@@ -133,7 +133,7 @@ void quicksort(int left, int right) {
         while (a[i] < a[right]) {
             i++;
         }
-        while (a[j] > arr[right]) {
+        while (a[j] > a[right]) {
             j--;
         }
         if (i <= j) {

@@ -1,103 +1,51 @@
 ---
-import "../../assets/app.css";
+import BaseLayout from "../../layouts/BaseLayout.astro";
 import "../../assets/PostList.css";
-import Head from "../../components/Head.astro";
 import Card from "../../components/Card.astro";
-import Navbar from "../../components/NavBar.astro";
-import ThemeController from "../../components/ThemeController.astro";
+import PostCard from "../../components/PostCard.astro";
 import { posts } from "../../data/posts";
 
 const topics = [...new Set(posts.map((post) => post.topic).filter(Boolean))].sort((a, b) => a.localeCompare(b));
 ---
 
-<Head />
-<Navbar />
-<ThemeController />
-<Card>
-    <h1 class="card-title">文章专栏</h1>
-    <div class="mb-6 flex flex-wrap gap-2">
-        <button
-            type="button"
-            data-topic="all"
-            class="rounded-full border border-white list-btn list-btn-active px-4 py-2 text-sm transition"
-        >
-            全部
-        </button>
-        {topics.map((topic) => (
+<BaseLayout title="文章专栏" description="按专栏浏览 June_qwq 的文章。">
+    <Card>
+        <h1 class="card-title">文章专栏</h1>
+        <div class="mb-6 flex flex-wrap gap-2">
             <button
                 type="button"
-                data-topic={topic}
-                class="rounded-full list-btn border border-base-content/10 px-4 py-2 text-sm transition"
+                data-topic="all"
+                class="rounded-full border border-white list-btn list-btn-active px-4 py-2 text-sm transition"
             >
-                {topic}
+                全部
             </button>
-        ))}
-    </div>
-    <div id="topic-summary" class="mb-4 text-sm opacity-70"></div>
-    <div class="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
-        {posts.map((post) => (
-            <a
-                href={post.url}
-                data-post-topic={post.topic}
-                class="post rounded-xl border border-base-content/10 p-4 transition list-post hover:shadow-md"
-            >
-                <div class="text-sm opacity-70">{post.date}</div>
-                <div class="mt-2 text-lg font-semibold">{post.title}</div>
-                {post.topic && <div class="mt-3 text-xs opacity-70">主题：{post.topic}</div>}
-                {post.tags.length > 0 && (
-                    <div class="mt-3 flex flex-wrap gap-2">
-                        {post.tags.map((tag) => (
-                            <span class="rounded-full bg-base-200 px-2 py-1 text-xs">{tag}</span>
-                        ))}
-                    </div>
-                )}
-                {post.description && <p class="mt-2 line-clamp-3 text-sm opacity-75">{post.description}</p>}
-            </a>
-        ))}
-    </div>
-</Card>
-<script is:inline>
-    const summary = document.getElementById("topic-summary");
-    const topicButtons = Array.from(document.querySelectorAll("[data-topic]"));
-    const postCards = Array.from(document.querySelectorAll("[data-post-topic]"));
+            {topics.map((topic) => (
+                <button
+                    type="button"
+                    data-topic={topic}
+                    class="rounded-full list-btn border border-base-content/10 px-4 py-2 text-sm transition"
+                >
+                    {topic}
+                </button>
+            ))}
+        </div>
+        <div id="topic-summary" class="mb-4 text-sm opacity-70"></div>
+        <div class="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
+            {posts.map((post) => (
+                <PostCard post={post} showTopic attrs={{ "data-post-topic": post.topic }} />
+            ))}
+        </div>
+    </Card>
+    <script>
+        import { initPostFilter } from "../../scripts/postFilter";
 
-    const setActiveButton = (activeTopic) => {
-        topicButtons.forEach((button) => {
-            const isActive = activeTopic ? button.dataset.topic === activeTopic : button.dataset.topic === "all";
-            button.classList.toggle("border-white", isActive);
-            button.classList.toggle("list-btn-active", isActive);
-            button.classList.toggle("text-white-content", isActive);
-            button.classList.toggle("border-base-content/10", !isActive);
-            button.classList.toggle("hover:border-primary", !isActive);
+        initPostFilter({
+            buttonAttr: "data-topic",
+            cardAttr: "data-post-topic",
+            summaryId: "topic-summary",
+            noun: "主题",
+            matchMode: "equals",
+            hoverClass: "hover:border-primary",
         });
-    };
-
-    const applyFilter = (activeTopic) => {
-        let visibleCount = 0;
-
-        postCards.forEach((card) => {
-            const topic = card.dataset.postTopic ?? "";
-            const visible = !activeTopic || activeTopic === "all" || topic === activeTopic;
-            card.hidden = !visible;
-            if (visible) {
-                visibleCount += 1;
-            }
-        });
-
-        if (summary) {
-            summary.textContent = !activeTopic || activeTopic === "all"
-                ? `共 ${postCards.length} 篇文章`
-                : `当前主题：${activeTopic}，共 ${visibleCount} 篇`;
-        }
-
-        setActiveButton(activeTopic || "all");
-    };
-
-    topicButtons.forEach((button) => {
-        button.addEventListener("click", () => {
-            applyFilter(button.dataset.topic ?? "all");
-        });
-    });
-
-    applyFilter("all");
-</script>
+    </script>
+</BaseLayout>

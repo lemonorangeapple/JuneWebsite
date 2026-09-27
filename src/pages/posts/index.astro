@@ -1,44 +1,24 @@
 ---
-import "../../assets/app.css";
+import BaseLayout from "../../layouts/BaseLayout.astro";
 import "../../assets/PostList.css";
-import Head from "../../components/Head.astro";
 import Card from "../../components/Card.astro";
-import Navbar from "../../components/NavBar.astro";
-import ThemeController from "../../components/ThemeController.astro";
 import { Icon } from 'astro-icon/components';
 import SearchModal from "../../components/SearchModal.astro";
+import PostCard from "../../components/PostCard.astro";
 import { posts } from "../../data/posts";
 ---
 
-<Head />
-<Navbar />
-<ThemeController />
-<Card>
-    <h1 class="card-title">文章总览</h1>
-    <div class="grid w-full grid-cols-1 gap-3 sm:w-3/5 sm:grid-cols-3">
-        <a class="btn btn-outline" href="/posts/tags"><Icon name="mdi:tag-outline" />文章标签</a>
-        <a class="btn btn-outline" href="/posts/topic"><Icon name="material-symbols:menu-rounded" />文章专栏</a>
-        <a class="btn btn-outline" onclick="showModal()"><Icon name="material-symbols:search-rounded" />文章搜索</a>
-    </div>
-    <SearchModal />
-    <div class="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
-        {posts.map((post) => (
-            <a
-                href={post.url}
-                class="post rounded-xl border border-base-content/10 p-4 transition list-post hover:shadow-md"
-            >
-                <div class="text-sm opacity-70">{post.date}</div>
-                <div class="mt-2 text-lg font-semibold">{post.title}</div>
-                {post.topic && <div class="mt-2 text-xs opacity-70">主题：{post.topic}</div>}
-                {post.tags.length > 0 && (
-                    <div class="mt-3 flex flex-wrap gap-2">
-                        {post.tags.map((tag) => (
-                            <span class="rounded-full bg-base-200 px-2 py-1 text-xs">{tag}</span>
-                        ))}
-                    </div>
-                )}
-                {post.description && <p class="mt-2 line-clamp-3 text-sm opacity-75">{post.description}</p>}
-            </a>
-        ))}
-    </div>
-</Card>
+<BaseLayout title="文章总览" description="June_qwq 博客的全部文章列表。">
+    <Card>
+        <h1 class="card-title">文章总览</h1>
+        <div class="grid w-full grid-cols-1 gap-3 sm:w-3/5 sm:grid-cols-3">
+            <a class="btn btn-outline" href="/posts/tags"><Icon name="mdi:tag-outline" />文章标签</a>
+            <a class="btn btn-outline" href="/posts/topic"><Icon name="material-symbols:menu-rounded" />文章专栏</a>
+            <a class="btn btn-outline" onclick="showModal()"><Icon name="material-symbols:search-rounded" />文章搜索</a>
+        </div>
+        <SearchModal />
+        <div class="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
+            {posts.map((post) => <PostCard post={post} showTopic />)}
+        </div>
+    </Card>
+</BaseLayout>
