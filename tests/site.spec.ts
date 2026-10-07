@@ -61,6 +61,20 @@ test("search is keyboard accessible and searches article bodies", async ({ page 
     await expect(trigger).toBeFocused();
 });
 
+test("search results do not overlap the search input", async ({ page }) => {
+    await page.goto("/posts/");
+    await page.getByRole("button", { name: "文章搜索" }).click();
+    await expect(page.locator("#search_results a").first()).toBeVisible();
+
+    // Read both rects in one frame: the dialog is still animating when it opens.
+    const gap = await page.evaluate(() => {
+        const input = document.getElementById("search_input")!.getBoundingClientRect();
+        const results = document.getElementById("search_div")!.getBoundingClientRect();
+        return results.top - input.bottom;
+    });
+    expect(gap).toBeGreaterThanOrEqual(0);
+});
+
 test("post filters expose their active state", async ({ page }) => {
     await page.goto("/posts/tags/");
     const tag = page.getByRole("button", { name: "AI底层" });

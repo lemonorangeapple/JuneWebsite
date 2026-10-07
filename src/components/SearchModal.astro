@@ -4,8 +4,8 @@ import "../assets/PostList.css";
 ---
 
 <dialog id="search_modal" class="modal" aria-labelledby="search_title">
-    <div class="modal-box h-5/8 max-w-2xl rounded-xl">
-        <div class="h-1/5">
+    <div class="modal-box flex h-5/8 max-w-2xl flex-col overflow-hidden rounded-xl">
+        <div class="shrink-0 pb-1">
             <form method="dialog" class="flex items-center justify-between gap-3">
                 <h2 id="search_title" class="text-lg font-semibold">搜索文章</h2>
                 <button
@@ -25,7 +25,7 @@ import "../assets/PostList.css";
                 aria-controls="search_results"
             />
         </div>
-        <div id="search_div" class="h-4/5 overflow-y-auto">
+        <div id="search_div" class="min-h-0 flex-1 overflow-y-auto">
             <p id="search_status" class="sr-only" aria-live="polite"></p>
             <div id="search_results" class="mt-4 grid gap-3"></div>
         </div>
