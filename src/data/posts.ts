@@ -22,6 +22,17 @@ export type Post = {
 
 const modules = import.meta.glob<PostModule>("../pages/posts/*.md", { eager: true });
 
+const toPlainText = (markdown: string) =>
+    markdown
+        .replace(/<\/?[a-zA-Z][^>\n]*>/g, " ")
+        .replace(/!\[([^\]]*)\]\([^)]*\)/g, "$1")
+        .replace(/\[([^\]]*)\]\([^)]*\)/g, "$1")
+        .replace(/^\s*(```|~~~).*$/gm, " ")
+        .replace(/^\s{0,3}(#{1,6}|>|[-*+]|\d+\.)\s+/gm, "")
+        .replace(/[*_`~|]/g, "")
+        .replace(/\s+/g, " ")
+        .trim();
+
 function requireString(value: unknown, field: string, path: string): string {
     if (typeof value !== "string" || !value.trim()) {
         throw new Error(`${path} 的 ${field} 必须是非空字符串`);
@@ -53,7 +64,7 @@ function normalizePost(path: string, module: PostModule): Post {
         topic,
         tags: module.frontmatter.tags,
         url: module.url ?? path.replace("../pages", "").replace(/\.md$/, "/"),
-        content: module.rawContent?.() ?? "",
+        content: toPlainText(module.rawContent?.() ?? ""),
     };
 }
 

@@ -125,11 +125,10 @@ import "../assets/PostList.css";
                           post.content,
                       ].join(" ").toLocaleLowerCase("zh-CN").includes(term))
                     : posts;
-                const visiblePosts = matched.slice(0, 12);
 
-                if (visiblePosts.length) {
-                    results.replaceChildren(...visiblePosts.map(createResult));
-                    status.textContent = `找到 ${matched.length} 篇文章，显示前 ${visiblePosts.length} 篇`;
+                if (matched.length) {
+                    results.replaceChildren(...matched.map(createResult));
+                    status.textContent = `找到 ${matched.length} 篇文章`;
                 } else {
                     const empty = document.createElement("div");
                     empty.className = "py-8 text-center text-sm opacity-70";
