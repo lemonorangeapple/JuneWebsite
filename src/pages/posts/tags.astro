@@ -15,6 +15,7 @@ const tags = [...new Set(posts.flatMap((post) => post.tags))].sort((a, b) => a.l
             <button
                 type="button"
                 data-tag="all"
+                aria-pressed="true"
                 class="rounded-full border border-white list-btn list-btn-active px-4 py-2 text-sm transition"
             >
                 全部
@@ -23,13 +24,14 @@ const tags = [...new Set(posts.flatMap((post) => post.tags))].sort((a, b) => a.l
                 <button
                     type="button"
                     data-tag={tag}
+                    aria-pressed="false"
                     class="rounded-full list-btn border border-base-content/10 px-4 py-2 text-sm transition"
                 >
                     {tag}
                 </button>
             ))}
         </div>
-        <div id="tag-summary" class="mb-4 text-sm opacity-70"></div>
+        <div id="tag-summary" class="mb-4 text-sm opacity-70" role="status" aria-live="polite"></div>
         <div class="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
             {posts.map((post) => (
                 <PostCard post={post} attrs={{ "data-post-tags": post.tags.join(",") }} />

@@ -2,12 +2,12 @@
 import "../assets/NavBar.css";
 ---
 
-<div
+<nav
     id="breadcrumb-root"
     class="breadcrumb fixed left-3 top-3 z-50 max-w-[calc(100vw-6.5rem)] sm:left-4 sm:top-4 sm:max-w-[calc(100vw-2rem)]"
-    aria-label="Breadcrumb"
+    aria-label="面包屑导航"
 >
-</div>
+</nav>
 
 <script is:inline>
     const root = document.getElementById("breadcrumb-root");
@@ -38,6 +38,7 @@ import "../assets/NavBar.css";
             if (index === crumbs.length - 1) {
                 const span = document.createElement("span");
                 span.className = "opacity-70";
+                span.setAttribute("aria-current", "page");
                 span.textContent = crumb.label;
                 li.append(span);
             } else {

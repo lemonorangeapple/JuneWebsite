@@ -10,7 +10,7 @@ type Props = MarkdownLayoutProps<{
     title: string;
     date: string;
     description: string;
-    topic: string;
+    topic?: string;
     tags: Array<string>;
     math?: boolean;
 }>;
@@ -18,17 +18,34 @@ type Props = MarkdownLayoutProps<{
 const { frontmatter } = Astro.props;
 ---
 
-<BaseLayout title={frontmatter.title} description={frontmatter.description}>
+<BaseLayout
+    title={frontmatter.title}
+    description={frontmatter.description}
+    type="article"
+    publishedTime={frontmatter.date}
+>
     {frontmatter.math && <Katex />}
-    <Card>
-        <h1 class="card-title">{frontmatter.title}</h1>
-        <span class="post-date">写于 {frontmatter.date}</span>
-        <div class="post-content">
-            <slot />
-        </div>
-    </Card>
+    <article>
+        <Card>
+            <h1 class="card-title">{frontmatter.title}</h1>
+            <time class="post-date" datetime={frontmatter.date}>写于 {frontmatter.date}</time>
+            <div class="post-content">
+                <slot />
+            </div>
+        </Card>
+    </article>
     <Card>
         <Comments />
     </Card>
     <Placeholder />
+    <script>
+        document
+            .querySelectorAll<HTMLInputElement>('.post-content .task-list-item input[type="checkbox"]')
+            .forEach((checkbox) => {
+                const label = checkbox.parentElement?.textContent?.trim();
+                if (label) {
+                    checkbox.setAttribute("aria-label", label);
+                }
+            });
+    </script>
 </BaseLayout>

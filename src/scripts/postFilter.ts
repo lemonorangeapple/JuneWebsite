@@ -15,9 +15,9 @@ export function initPostFilter(options: PostFilterOptions): void {
     const setActiveButton = (active: string): void => {
         buttons.forEach((button) => {
             const isActive = button.getAttribute(options.buttonAttr) === active;
+            button.setAttribute("aria-pressed", String(isActive));
             button.classList.toggle("border-white", isActive);
             button.classList.toggle("list-btn-active", isActive);
-            button.classList.toggle("text-white-content", isActive);
             button.classList.toggle("border-base-content/10", !isActive);
             button.classList.toggle(options.hoverClass, !isActive);
         });

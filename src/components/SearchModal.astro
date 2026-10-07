@@ -2,106 +2,175 @@
 import "../assets/SearchModal.css";
 import "../assets/PostList.css";
 ---
-<dialog id="search_modal" class="modal">
-    <div class="modal-box max-w-2xl rounded-xl h-5/8" onclick="document.getElementById('search_input').focus()">
-        <div class="h-1/5">
+
+<dialog id="search_modal" class="modal" aria-labelledby="search_title">
+    <div class="modal-box flex h-5/8 max-w-2xl flex-col overflow-hidden rounded-xl">
+        <div class="shrink-0 pb-1">
             <form method="dialog" class="flex items-center justify-between gap-3">
-                <h3 class="text-lg font-semibold">搜索文章</h3>
+                <h2 id="search_title" class="text-lg font-semibold">搜索文章</h2>
+                <button
+                    type="submit"
+                    class="rounded-lg border border-base-content/20 px-3 py-2 text-sm hover:border-base-content"
+                >
+                    关闭
+                </button>
             </form>
+            <label for="search_input" class="sr-only">搜索文章内容、标签或专栏</label>
             <input
                 id="search_input"
+                type="search"
                 class="input mt-4 w-full rounded-xl"
                 placeholder="搜索文章内容、标签、专栏等"
                 autocomplete="off"
+                aria-controls="search_results"
             />
         </div>
-        <div id="search_div" class="overflow-y-auto h-4/5">
+        <div id="search_div" class="min-h-0 flex-1 overflow-y-auto">
+            <p id="search_status" class="sr-only" aria-live="polite"></p>
             <div id="search_results" class="mt-4 grid gap-3"></div>
         </div>
     </div>
     <form method="dialog" class="modal-backdrop">
-        <button>close</button>
+        <button aria-label="关闭搜索">关闭</button>
     </form>
 </dialog>
 
-<script is:inline>
+<script>
+    type SearchPost = {
+        title: string;
+        url: string;
+        description: string;
+        topic: string;
+        tags: string[];
+        content: string;
+    };
+
     const modal = document.getElementById("search_modal");
+    const trigger = document.getElementById("search-trigger");
     const input = document.getElementById("search_input");
     const results = document.getElementById("search_results");
+    const status = document.getElementById("search_status");
 
-    const escapeHtml = (value) =>
-        String(value ?? "").replace(
-            /[&<>"']/g,
-            (char) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[char],
-        );
+    if (
+        modal instanceof HTMLDialogElement &&
+        trigger instanceof HTMLButtonElement &&
+        input instanceof HTMLInputElement &&
+        results instanceof HTMLElement &&
+        status instanceof HTMLElement
+    ) {
+        let postsCache: Promise<SearchPost[]> | null = null;
+        let renderVersion = 0;
+        let timer: ReturnType<typeof setTimeout> | undefined;
 
-    let postsCache = null;
-    const loadPosts = () => {
-        if (!postsCache) {
-            postsCache = fetch("/search.json")
-                .then((res) => {
-                    if (!res.ok) {
-                        throw new Error(`搜索数据加载失败 (${res.status})`);
+        const loadPosts = (): Promise<SearchPost[]> => {
+            postsCache ??= fetch("/search.json")
+                .then(async (response) => {
+                    if (!response.ok) {
+                        throw new Error(`搜索数据加载失败 (${response.status})`);
                     }
-                    return res.json();
+
+                    const data: unknown = await response.json();
+                    return Array.isArray(data) ? data as SearchPost[] : [];
                 })
-                .catch((err) => {
-                    console.error(err);
-                    return [];
+                .catch((error) => {
+                    postsCache = null;
+                    throw error;
                 });
-        }
-        return postsCache;
-    };
 
-    const renderResults = (query) => {
-        if (!results) return;
+            return postsCache;
+        };
 
-        loadPosts().then((posts) => {
-            const term = query.trim().toLowerCase();
-            const matched = term
-                ? posts.filter((post) => {
-                      const haystack = [post, post.title, post.description, post.topic, ...(post.tags ?? [])]
-                          .join(" ")
-                          .toLowerCase();
-                      return haystack.includes(term);
-                  })
-                : posts;
+        const createResult = (post: SearchPost): HTMLAnchorElement => {
+            const link = document.createElement("a");
+            link.href = post.url;
+            link.className = "post list-post rounded-xl border border-base-content/10 p-3 transition hover:shadow-md";
 
-            results.innerHTML =
-                matched
-                    .slice(0, 12)
-                    .map(
-                        (post) => `
-            <a href="${escapeHtml(post.url)}" class="post rounded-xl border border-base-content/10 p-3 transition list-post hover:shadow-md">
-                <div class="text-sm opacity-70">${escapeHtml(post.topic || "文章")}</div>
-                <div class="mt-1 font-semibold">${escapeHtml(post.title)}</div>
-                ${
-                    post.description
-                        ? `<div class="mt-1 text-sm opacity-75 line-clamp-2">${escapeHtml(post.description)}</div>`
-                        : ""
+            const topic = document.createElement("div");
+            topic.className = "text-sm opacity-70";
+            topic.textContent = post.topic || "文章";
+
+            const title = document.createElement("div");
+            title.className = "mt-1 font-semibold";
+            title.textContent = post.title;
+
+            link.append(topic, title);
+
+            if (post.description) {
+                const description = document.createElement("div");
+                description.className = "mt-1 line-clamp-2 text-sm opacity-75";
+                description.textContent = post.description;
+                link.append(description);
+            }
+
+            return link;
+        };
+
+        const renderResults = async (query: string): Promise<void> => {
+            const version = ++renderVersion;
+            status.textContent = "正在加载搜索结果";
+
+            try {
+                const posts = await loadPosts();
+                if (version !== renderVersion) {
+                    return;
                 }
-            </a>
-        `,
-                    )
-                    .join("") || '<div class="py-8 text-center text-sm opacity-70">无结果</div>';
-        });
-    };
 
-    if (input && results) {
-        let timer;
-        input.addEventListener("input", (event) => {
+                const term = query.trim().toLocaleLowerCase("zh-CN");
+                const matched = term
+                    ? posts.filter((post) => [
+                          post.title,
+                          post.description,
+                          post.topic,
+                          ...post.tags,
+                          post.content,
+                      ].join(" ").toLocaleLowerCase("zh-CN").includes(term))
+                    : posts;
+                const visiblePosts = matched.slice(0, 12);
+
+                if (visiblePosts.length) {
+                    results.replaceChildren(...visiblePosts.map(createResult));
+                    status.textContent = `找到 ${matched.length} 篇文章，显示前 ${visiblePosts.length} 篇`;
+                } else {
+                    const empty = document.createElement("div");
+                    empty.className = "py-8 text-center text-sm opacity-70";
+                    empty.textContent = "无结果";
+                    results.replaceChildren(empty);
+                    status.textContent = "没有找到相关文章";
+                }
+            } catch (error) {
+                console.error(error);
+                const failure = document.createElement("div");
+                failure.className = "py-8 text-center text-sm text-error";
+                failure.textContent = "搜索数据加载失败，请稍后重试";
+                results.replaceChildren(failure);
+                status.textContent = failure.textContent;
+            }
+        };
+
+        input.addEventListener("input", () => {
             clearTimeout(timer);
-            timer = setTimeout(() => renderResults(event.target.value), 150);
+            timer = setTimeout(() => void renderResults(input.value), 150);
         });
-        modal?.addEventListener("close", () => {
-            input.value = "";
-            renderResults("");
-        });
-    }
 
-    function showModal() {
-        search_modal.showModal();
-        document.getElementById("search_input").focus();
-        renderResults("");
+        input.addEventListener("keydown", (event) => {
+            if (event.key === "Escape") {
+                event.preventDefault();
+                modal.close();
+            }
+        });
+
+        trigger.addEventListener("click", () => {
+            modal.showModal();
+            input.focus();
+            void renderResults("");
+        });
+
+        modal.addEventListener("close", () => {
+            input.value = "";
+            renderVersion += 1;
+            results.replaceChildren();
+            status.textContent = "";
+            trigger.focus();
+        });
     }
 </script>

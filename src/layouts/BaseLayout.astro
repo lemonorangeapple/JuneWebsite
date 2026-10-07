@@ -7,19 +7,31 @@ import ThemeController from "../components/ThemeController.astro";
 interface Props {
     title?: string;
     description?: string;
+    type?: "website" | "article";
+    publishedTime?: string;
 }
 
-const { title, description } = Astro.props;
+const { title, description, type, publishedTime } = Astro.props;
 ---
 
 <!DOCTYPE html>
 <html lang="zh-CN">
     <head>
-        <Head title={title} description={description} />
+        <Head title={title} description={description} type={type} publishedTime={publishedTime} />
     </head>
     <body>
-        <NavBar />
-        <ThemeController />
-        <slot />
+        <header>
+            <a
+                href="#main-content"
+                class="sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[60] focus:not-sr-only focus:rounded-lg focus:bg-base-100 focus:px-4 focus:py-2 focus:shadow"
+            >
+                跳至正文
+            </a>
+            <NavBar />
+            <ThemeController />
+        </header>
+        <main id="main-content" tabindex="-1">
+            <slot />
+        </main>
     </body>
 </html>

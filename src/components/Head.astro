@@ -2,25 +2,48 @@
 interface Props {
     title?: string;
     description?: string;
+    type?: "website" | "article";
+    publishedTime?: string;
 }
 
-const { title, description } = Astro.props;
+const {
+    title = "June_qwq",
+    description = "June_qwq 的个人博客，记录全栈开发、基础运维与信奥学习笔记。",
+    type = "website",
+    publishedTime,
+} = Astro.props;
 const site = Astro.site ?? Astro.url;
 const canonical = new URL(Astro.url.pathname, site).href;
 ---
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-{title && <title>{title}</title>}
-{description && <meta name="description" content={description} />}
-{title && <meta property="og:title" content={title} />}
-{description && <meta property="og:description" content={description} />}
-<meta property="og:type" content="website" />
+<meta name="color-scheme" content="light dark" />
+<title>{title}</title>
+<meta name="description" content={description} />
+<meta property="og:title" content={title} />
+<meta property="og:description" content={description} />
+<meta property="og:type" content={type} />
+<meta property="og:url" content={canonical} />
+<meta property="og:site_name" content="June_qwq" />
+{type === "article" && publishedTime && <meta property="article:published_time" content={publishedTime} />}
+<meta name="twitter:card" content="summary" />
+<meta name="twitter:title" content={title} />
+<meta name="twitter:description" content={description} />
 <link rel="canonical" href={canonical} />
+<link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+<link rel="alternate icon" href="/favicon.ico" />
 <link rel="alternate" type="application/rss+xml" title="June_qwq" href={new URL("/rss.xml", site).href} />
 <script is:inline>
     (function () {
         const storageKey = "theme";
-        const savedTheme = localStorage.getItem(storageKey);
+        let savedTheme = null;
+
+        try {
+            savedTheme = localStorage.getItem(storageKey);
+        } catch {
+            savedTheme = null;
+        }
+
         const systemTheme = window.matchMedia("(prefers-color-scheme: light)").matches
             ? "light"
             : "dark";
@@ -29,4 +52,12 @@ const canonical = new URL(Astro.url.pathname, site).href;
         document.documentElement.setAttribute("data-theme", theme);
     })();
 </script>
-<script defer src="https://up.imjcj.eu.org/script.js" data-website-id="0cf78362-8244-4e56-8461-593a7f59fd6d"></script>
+<script is:inline>
+    if (window.location.hostname === "www.imjcj.eu.org") {
+        const analytics = document.createElement("script");
+        analytics.defer = true;
+        analytics.src = "https://up.imjcj.eu.org/script.js";
+        analytics.dataset.websiteId = "0cf78362-8244-4e56-8461-593a7f59fd6d";
+        document.head.append(analytics);
+    }
+</script>

@@ -1,11 +1,13 @@
 .modal {
     border: 0 !important;
-    outline: 0 !important;
 }
 
 #search_input {
-    outline: 0;
-    border: 1px solid;
-    border-color: var(--color-base-content);
+    border: 1px solid var(--color-base-content);
     background-color: var(--color-base-300);
+}
+
+#search_input:focus-visible {
+    outline: 2px solid var(--color-info);
+    outline-offset: 2px;
 }

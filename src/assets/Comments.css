@@ -1,4 +1,16 @@
-body {
-    --waline-border: none;
-    --waline-bg-color: var(--color-base-200) !important;
+#waline {
+    --waline-white: var(--color-base-100);
+    --waline-theme-color: var(--color-base-content);
+    --waline-active-color: var(--color-base-content);
+    --waline-border: 1px solid color-mix(in oklab, var(--color-base-content) 20%, transparent);
+    --waline-bg-color: var(--color-base-200);
+    --waline-bg-color-light: var(--color-base-300);
+    --waline-bg-color-hover: var(--color-base-300);
+    --waline-border-color: color-mix(in oklab, var(--color-base-content) 20%, transparent);
+    --waline-color: var(--color-base-content);
+    --waline-info-color: color-mix(in oklab, var(--color-base-content) 78%, var(--color-base-200));
+    --waline-light-grey: color-mix(in oklab, var(--color-base-content) 72%, var(--color-base-200));
+    --waline-dark-grey: color-mix(in oklab, var(--color-base-content) 88%, var(--color-base-200));
+    --waline-disable-bg-color: var(--color-base-300);
+    --waline-disable-color: color-mix(in oklab, var(--color-base-content) 70%, var(--color-base-300));
 }
