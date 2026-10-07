@@ -1,16 +1,23 @@
 ---
-
+import "katex/dist/katex.min.css";
 ---
 
-<link
-    rel="stylesheet"
-    href="https://api.imjcj.eu.org/cdn.jsdelivr.net/npm/katex@0.17.0/dist/katex.min.css"
-/>
-<script
-    defer
-    src="https://api.imjcj.eu.org/cdn.jsdelivr.net/npm/katex@0.17.0/dist/katex.min.js"
-></script>
-<script
-    defer
-    src="https://api.imjcj.eu.org/cdn.jsdelivr.net/npm/katex@0.17.0/dist/contrib/auto-render.min.js"
-    onload="renderMathInElement(document.querySelector('.post-content'), { delimiters: [{ left: '$$', right: '$$', display: true }, { left: '$', right: '$', display: false }], throwOnError: false });"></script>
+<script>
+    import renderMathInElement from "katex/contrib/auto-render";
+
+    const content = document.querySelector<HTMLElement>(".post-content");
+
+    if (content) {
+        renderMathInElement(content, {
+            delimiters: [
+                { left: "$$", right: "$$", display: true },
+                { left: "$", right: "$", display: false },
+            ],
+            throwOnError: false,
+        });
+
+        content.querySelectorAll<HTMLElement>(".katex-display").forEach((formula) => {
+            formula.tabIndex = 0;
+        });
+    }
+</script>

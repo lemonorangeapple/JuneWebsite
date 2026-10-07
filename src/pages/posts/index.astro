@@ -14,7 +14,7 @@ import { posts } from "../../data/posts";
         <div class="grid w-full grid-cols-1 gap-3 sm:w-3/5 sm:grid-cols-3">
             <a class="btn btn-outline" href="/posts/tags"><Icon name="mdi:tag-outline" />文章标签</a>
             <a class="btn btn-outline" href="/posts/topic"><Icon name="material-symbols:menu-rounded" />文章专栏</a>
-            <a class="btn btn-outline" onclick="showModal()"><Icon name="material-symbols:search-rounded" />文章搜索</a>
+            <button id="search-trigger" type="button" class="btn btn-outline"><Icon name="material-symbols:search-rounded" />文章搜索</button>
         </div>
         <SearchModal />
         <div class="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">

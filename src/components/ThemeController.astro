@@ -4,8 +4,8 @@ import { Icon } from 'astro-icon/components';
 
 <label
     class="swap swap-rotate fixed right-3 top-3 z-50 rounded-box bg-base-100/80 px-3 py-3 text-sm shadow-sm backdrop-blur transition-transform duration-200 active:scale-95 sm:right-4 sm:top-4"
-    aria-label="Toggle theme"
-    title="Toggle theme"
+    aria-label="切换主题"
+    title="切换主题"
 >
     <input id="theme-controller" type="checkbox" />
 
@@ -18,8 +18,16 @@ import { Icon } from 'astro-icon/components';
     const storageKey = "theme";
     const checkbox = document.getElementById("theme-controller");
 
-    if (checkbox) {
-        const savedTheme = localStorage.getItem(storageKey);
+    const getSavedTheme = () => {
+        try {
+            return localStorage.getItem(storageKey);
+        } catch {
+            return null;
+        }
+    };
+
+    if (checkbox instanceof HTMLInputElement) {
+        const savedTheme = getSavedTheme();
         const root = document.documentElement;
         const systemTheme = window.matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark";
         const theme = savedTheme === "light" || savedTheme === "dark" ? savedTheme : systemTheme;
@@ -28,21 +36,26 @@ import { Icon } from 'astro-icon/components';
         root.setAttribute("data-theme", theme);
 
         const applyTheme = () => {
-            const theme = checkbox.checked ? "light" : "dark";
-            root.setAttribute("data-theme", theme);
-            localStorage.setItem(storageKey, theme);
+            const selectedTheme = checkbox.checked ? "light" : "dark";
+            root.setAttribute("data-theme", selectedTheme);
+
+            try {
+                localStorage.setItem(storageKey, selectedTheme);
+            } catch {
+                return;
+            }
         };
 
         checkbox.addEventListener("change", applyTheme);
 
         window.matchMedia("(prefers-color-scheme: light)").addEventListener("change", (event) => {
-            if (localStorage.getItem(storageKey)) {
+            if (getSavedTheme()) {
                 return;
             }
 
-            const theme = event.matches ? "light" : "dark";
-            checkbox.checked = theme === "light";
-            root.setAttribute("data-theme", theme);
+            const selectedTheme = event.matches ? "light" : "dark";
+            checkbox.checked = selectedTheme === "light";
+            root.setAttribute("data-theme", selectedTheme);
         });
     }
 </script>

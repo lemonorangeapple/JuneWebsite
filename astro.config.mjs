@@ -8,6 +8,7 @@ import sitemap from '@astrojs/sitemap';
 
 const postsLayout = '../../layouts/PostsLayout.astro';
 
+/** @param {unknown} value */
 function stringifyDateValue(value) {
     if (value instanceof Date) {
         return value.toISOString().slice(0, 10);
@@ -16,8 +17,26 @@ function stringifyDateValue(value) {
     return value;
 }
 
+/** @param {unknown} node */
+function containsMath(node) {
+    if (!node || typeof node !== 'object') {
+        return false;
+    }
+
+    if ('type' in node && (node.type === 'code' || node.type === 'inlineCode')) {
+        return false;
+    }
+
+    if ('type' in node && node.type === 'text' && 'value' in node && typeof node.value === 'string') {
+        return /\$\$[\s\S]*?\$\$/.test(node.value) || /(?<!\\)\$[^$\n]+(?<!\\)\$/.test(node.value);
+    }
+
+    return 'children' in node && Array.isArray(node.children) && node.children.some(containsMath);
+}
+
+/** @type {import('@astrojs/markdown-remark').RemarkPlugin} */
 function autoPostsLayout() {
-    return function (_, file) {
+    return function (tree, file) {
         const path = String(file.path ?? '');
         if (!path.includes('/src/pages/posts/') && !path.includes('\\src\\pages\\posts\\')) {
             return;
@@ -26,10 +45,7 @@ function autoPostsLayout() {
         file.data.astro ??= {};
         file.data.astro.frontmatter ??= {};
         file.data.astro.frontmatter.layout ??= postsLayout;
-
-        const raw = String(file.value ?? '');
-        file.data.astro.frontmatter.math =
-            /\$\$[\s\S]*?\$\$/.test(raw) || /(?<!\\)\$[^$\n]+(?<!\\)\$/.test(raw);
+        file.data.astro.frontmatter.math ??= containsMath(tree);
 
         for (const [key, value] of Object.entries(file.data.astro.frontmatter)) {
             if (key === 'layout') {
@@ -48,6 +64,9 @@ export default defineConfig({
         plugins: [tailwindcss()]
     },
     markdown: {
+        shikiConfig: {
+            theme: 'github-dark-high-contrast',
+        },
         processor: unified({
             remarkPlugins: [remarkBreaks, autoPostsLayout],
         }),

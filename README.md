@@ -41,6 +41,24 @@ npm run build
 npm run preview
 ```
 
+## 质量检查
+
+首次运行端到端测试前安装 Playwright 浏览器：
+
+```bash
+npx playwright install chromium
+```
+
+```bash
+npm run check
+npm test
+npm run verify
+```
+
+- `npm run check`：执行 Astro 与 TypeScript 检查
+- `npm test`：构建站点并运行移动端、桌面端 Playwright 测试
+- `npm run verify`：依次执行类型检查、端到端测试和依赖安全审计
+
 ## 项目结构
 
 ```text
@@ -49,6 +67,7 @@ src/
   components/    可复用组件
   layouts/       页面布局
   pages/         路由页面与文章内容
+tests/           Playwright 端到端测试
 public/          静态资源
 ```
 

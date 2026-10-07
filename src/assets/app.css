@@ -67,7 +67,21 @@ p {
 .post-content {
     width: 100%;
     max-width: 100%;
+    line-height: 1.75;
     overflow-wrap: anywhere;
+}
+
+.post-content > * + * {
+    margin-top: 1rem;
+}
+
+.post-content > :is(h2, h3, h4) {
+    margin-top: 2rem;
+    margin-bottom: 0.75rem;
+}
+
+.post-content > br {
+    display: none;
 }
 
 .post-content > :first-child {
@@ -76,6 +90,51 @@ p {
 
 .post-content > :last-child {
     margin-bottom: 0;
+}
+
+.post-content :is(ul, ol) {
+    padding-inline-start: 1.5rem;
+}
+
+.post-content ul {
+    list-style: disc;
+}
+
+.post-content ol {
+    list-style: decimal;
+}
+
+.post-content li + li,
+.post-content li > :is(ul, ol) {
+    margin-top: 0.4rem;
+}
+
+.post-content .contains-task-list {
+    list-style: none;
+    padding-inline-start: 0;
+}
+
+.post-content .task-list-item {
+    display: flex;
+    gap: 0.5rem;
+    align-items: flex-start;
+}
+
+.post-content .task-list-item > input {
+    flex: none;
+    margin-top: 0.45rem;
+}
+
+.post-content blockquote {
+    padding: 0.75rem 1rem;
+    border-inline-start: 0.25rem solid var(--color-info);
+    border-radius: 0.5rem;
+    background: var(--color-base-300);
+}
+
+.post-content hr {
+    margin-block: 2rem;
+    border-color: color-mix(in oklab, var(--color-base-content) 20%, transparent);
 }
 
 .post-content img,
@@ -88,6 +147,28 @@ p {
 .post-content table {
     display: block;
     overflow-x: auto;
+    border-collapse: collapse;
+}
+
+.post-content :is(th, td) {
+    padding: 0.6rem 0.75rem;
+    border: 1px solid color-mix(in oklab, var(--color-base-content) 20%, transparent);
+    text-align: start;
+}
+
+.post-content th {
+    background: var(--color-base-300);
+}
+
+.post-content .katex-display {
+    max-width: 100%;
+    overflow-x: auto;
+    padding-block: 0.25rem;
+}
+
+.post-content .katex-display:focus-visible {
+    outline: 2px solid var(--color-base-content);
+    outline-offset: 2px;
 }
 
 img,
@@ -102,8 +183,10 @@ pre {
 
 /* Link style: only article body, so nav/buttons/cards stay unstyled */
 .post-content a {
-    color: var(--color-info);
+    color: var(--color-base-content);
     text-decoration: underline;
+    text-decoration-thickness: 0.1em;
+    text-underline-offset: 0.2em;
 }
 
 /* Code block style */
@@ -117,11 +200,11 @@ code {
     border-radius: 7px;
 }
 
-p code {
-    background-color: #24292e;
-    color: var(--color-primary-content);
-    margin: 0 0.25rem;
-    padding: 0 0.35rem;
+.post-content :not(pre) > code {
+    margin-inline: 0.2rem;
+    padding-inline: 0.35rem;
+    background-color: var(--color-base-300);
+    color: var(--color-base-content);
     word-break: break-word;
 }
 

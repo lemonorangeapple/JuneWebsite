@@ -1,18 +1,44 @@
 ---
 import "../assets/Comments.css";
+import "@waline/client/waline.css";
 ---
-<div class="card-body w-full" id="waline"></div>
-<link
-    rel="stylesheet"
-    href="https://api.imjcj.eu.org/cdn.jsdelivr.net/npm/@waline/client@v3/dist/waline.css"
-/>
-<script type="module">
-    import { init } from "https://api.imjcj.eu.org/cdn.jsdelivr.net/npm/@waline/client@v3/dist/waline.js";
 
-    init({
-        el: "#waline",
-        serverURL: "https://waline.imjcj.eu.org",
-        dark: "auto",
-        path: "blog/" + window.location.pathname
-    });
+<div class="card-body w-full" id="waline"></div>
+
+<script>
+    import { init } from "@waline/client";
+
+    const container = document.querySelector<HTMLElement>("#waline");
+
+    if (container) {
+        const fixAccessibility = (): void => {
+            container.querySelectorAll<HTMLLabelElement>("label[aria-label]").forEach((label) => {
+                const accessibleName = label.getAttribute("aria-label")?.trim();
+                label.removeAttribute("aria-label");
+
+                if (accessibleName && !label.textContent?.trim()) {
+                    const text = document.createElement("span");
+                    text.className = "sr-only";
+                    text.textContent = accessibleName;
+                    label.append(text);
+                }
+            });
+        };
+
+        const observer = new MutationObserver(fixAccessibility);
+        observer.observe(container, { childList: true, subtree: true });
+
+        const instance = init({
+            el: container,
+            serverURL: "https://waline.imjcj.eu.org",
+            dark: 'html[data-theme="dark"]',
+            path: `blog${window.location.pathname}`,
+        });
+
+        fixAccessibility();
+        window.addEventListener("pagehide", () => {
+            observer.disconnect();
+            instance?.destroy();
+        }, { once: true });
+    }
 </script>

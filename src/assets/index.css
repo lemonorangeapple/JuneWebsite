@@ -1,6 +1,6 @@
 .slogan {
     font-size: small;
-    color: var(--color-primary-content) !important;
+    color: var(--color-base-content);
 }
 
 #avatar {

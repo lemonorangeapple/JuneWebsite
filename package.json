@@ -9,20 +9,31 @@
     "dev": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
-    "astro": "astro"
+    "astro": "astro",
+    "check": "astro check",
+    "test": "npm run build && playwright test",
+    "verify": "npm run check && npm test && node scripts/audit.mjs"
   },
   "dependencies": {
-    "@astrojs/markdown-remark": "^7.2.0",
+    "@astrojs/markdown-remark": "^7.3.2",
     "@astrojs/rss": "^4.0.19",
     "@astrojs/sitemap": "^3.7.4",
     "@iconify-json/material-symbols": "^1.2.83",
     "@iconify-json/mdi": "^1.2.3",
     "@iconify-json/mingcute": "^1.2.7",
     "@tailwindcss/vite": "^4.3.2",
-    "astro": "^7.0.5",
-    "astro-icon": "^1.1.5",
+    "@waline/client": "^3.16.0",
+    "astro": "^7.3.6",
+    "astro-icon": "^1.2.0",
     "daisyui": "^5.6.7",
+    "katex": "^0.19.0",
     "remark-breaks": "^4.0.0",
     "tailwindcss": "^4.3.2"
+  },
+  "devDependencies": {
+    "@astrojs/check": "^0.9.10",
+    "@axe-core/playwright": "^4.13.0",
+    "@playwright/test": "^1.63.0",
+    "typescript": "^6.0.3"
   }
 }
