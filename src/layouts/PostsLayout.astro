@@ -2,7 +2,6 @@
 import Katex from "../components/Katex.astro";
 import Card from "../components/Card.astro";
 import Comments from "../components/Comments.astro";
-import Placeholder from "../components/Placeholder.astro";
 import BaseLayout from "./BaseLayout.astro";
 import type { MarkdownLayoutProps } from "astro";
 
@@ -25,19 +24,24 @@ const { frontmatter } = Astro.props;
     publishedTime={frontmatter.date}
 >
     {frontmatter.math && <Katex />}
-    <article>
-        <Card>
-            <h1 class="card-title">{frontmatter.title}</h1>
-            <time class="post-date" datetime={frontmatter.date}>写于 {frontmatter.date}</time>
-            <div class="post-content">
-                <slot />
-            </div>
+    <div class="mx-auto flex w-full max-w-3xl flex-col gap-6">
+        <article>
+            <Card>
+                <header class="flex flex-col gap-2">
+                    <h1 class="text-headline-medium text-on-surface sm:text-headline-large">{frontmatter.title}</h1>
+                    <time class="text-label-large text-on-surface-variant" datetime={frontmatter.date}>
+                        写于 {frontmatter.date}
+                    </time>
+                </header>
+                <div class="post-content">
+                    <slot />
+                </div>
+            </Card>
+        </article>
+        <Card variant="outlined">
+            <Comments />
         </Card>
-    </article>
-    <Card>
-        <Comments />
-    </Card>
-    <Placeholder />
+    </div>
     <script>
         document
             .querySelectorAll<HTMLInputElement>('.post-content .task-list-item input[type="checkbox"]')

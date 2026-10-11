@@ -65,7 +65,12 @@ export default defineConfig({
     },
     markdown: {
         shikiConfig: {
-            theme: 'github-dark-high-contrast',
+            // Both themes are emitted as CSS variables; prose.css picks one from the active colour scheme.
+            themes: {
+                light: 'github-light-high-contrast',
+                dark: 'github-dark-high-contrast',
+            },
+            defaultColor: false,
         },
         processor: unified({
             remarkPlugins: [remarkBreaks, autoPostsLayout],

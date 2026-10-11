@@ -1,0 +1,344 @@
+/*
+ * Shared Material Design 3 components.
+ * Interactive surfaces share one "state layer": an overlay in the content colour
+ * whose opacity is 8% on hover, 10% on focus and 10% when pressed.
+ */
+
+:is(
+    .m3-button,
+    .m3-icon-button,
+    .m3-chip,
+    .m3-card--interactive,
+    .m3-list-item,
+    .m3-search-bar,
+    .m3-breadcrumb__link
+) {
+    position: relative;
+    isolation: isolate;
+    -webkit-tap-highlight-color: transparent;
+}
+
+:is(
+    .m3-button,
+    .m3-icon-button,
+    .m3-chip,
+    .m3-card--interactive,
+    .m3-list-item,
+    .m3-search-bar,
+    .m3-breadcrumb__link
+)::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    border-radius: inherit;
+    background-color: currentColor;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 150ms var(--ease-standard);
+}
+
+:is(
+    .m3-button,
+    .m3-icon-button,
+    .m3-chip,
+    .m3-card--interactive,
+    .m3-list-item,
+    .m3-search-bar,
+    .m3-breadcrumb__link
+):focus-visible::before,
+:is(
+    .m3-button,
+    .m3-icon-button,
+    .m3-chip,
+    .m3-card--interactive,
+    .m3-list-item,
+    .m3-search-bar,
+    .m3-breadcrumb__link
+):active::before {
+    opacity: 0.1;
+}
+
+@media (hover: hover) {
+    :is(
+        .m3-button,
+        .m3-icon-button,
+        .m3-chip,
+        .m3-card--interactive,
+        .m3-list-item,
+        .m3-search-bar,
+        .m3-breadcrumb__link
+    ):hover::before {
+        opacity: 0.08;
+    }
+}
+
+/* Buttons ---------------------------------------------------------------- */
+
+.m3-button {
+    --button-container: transparent;
+    --button-label: var(--color-primary);
+    --button-outline: transparent;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    min-height: 2.5rem;
+    padding-inline: 1.5rem;
+    border: 1px solid var(--button-outline);
+    border-radius: 9999px;
+    background-color: var(--button-container);
+    color: var(--button-label);
+    cursor: pointer;
+    text-align: center;
+    text-decoration: none;
+    user-select: none;
+    transition:
+        box-shadow 200ms var(--ease-standard),
+        background-color 200ms var(--ease-standard);
+    @apply text-label-large;
+}
+
+.m3-button:has(> svg:first-child) {
+    padding-inline-start: 1rem;
+}
+
+.m3-button > svg {
+    flex: none;
+    width: 1.125rem;
+    height: 1.125rem;
+}
+
+.m3-button--filled {
+    --button-container: var(--color-primary);
+    --button-label: var(--color-on-primary);
+}
+
+.m3-button--tonal {
+    --button-container: var(--color-secondary-container);
+    --button-label: var(--color-on-secondary-container);
+}
+
+.m3-button--outlined {
+    --button-outline: var(--color-outline);
+}
+
+.m3-button--filled:hover,
+.m3-button--tonal:hover {
+    box-shadow: var(--shadow-elevation-1);
+}
+
+.m3-icon-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex: none;
+    width: 2.5rem;
+    height: 2.5rem;
+    border-radius: 9999px;
+    color: var(--color-on-surface-variant);
+    cursor: pointer;
+    text-decoration: none;
+}
+
+.m3-icon-button > svg {
+    width: 1.5rem;
+    height: 1.5rem;
+}
+
+/* Cards ------------------------------------------------------------------ */
+
+.m3-card {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    min-width: 0;
+    border-radius: var(--radius-md);
+    color: var(--color-on-surface);
+    text-decoration: none;
+    transition:
+        box-shadow 200ms var(--ease-standard),
+        border-color 200ms var(--ease-standard);
+}
+
+.m3-card--elevated {
+    background-color: var(--color-surface-container-low);
+    box-shadow: var(--shadow-elevation-1);
+}
+
+.m3-card--filled {
+    background-color: var(--color-surface-container-highest);
+}
+
+.m3-card--outlined {
+    border: 1px solid var(--color-outline-variant);
+    background-color: var(--color-surface);
+}
+
+.m3-card--interactive {
+    cursor: pointer;
+}
+
+.m3-card--elevated.m3-card--interactive:hover {
+    box-shadow: var(--shadow-elevation-2);
+}
+
+.m3-card--outlined.m3-card--interactive:hover {
+    border-color: var(--color-outline);
+}
+
+/* Page-level sections: roomier padding and the extra-large corner. */
+.m3-card--section {
+    gap: 1.5rem;
+    padding: 1.5rem;
+    border-radius: var(--radius-xl);
+}
+
+@media (min-width: 40rem) {
+    .m3-card--section {
+        padding: 2rem;
+    }
+}
+
+/* Chips ------------------------------------------------------------------ */
+
+.m3-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    min-height: 2rem;
+    padding-inline: 1rem;
+    border: 1px solid var(--color-outline);
+    border-radius: var(--radius-sm);
+    background-color: transparent;
+    color: var(--color-on-surface-variant);
+    cursor: pointer;
+    user-select: none;
+    transition:
+        background-color 200ms var(--ease-standard),
+        border-color 200ms var(--ease-standard);
+    @apply text-label-large;
+}
+
+.m3-chip__icon {
+    display: none;
+    flex: none;
+    width: 1.125rem;
+    height: 1.125rem;
+}
+
+/* Filter chip: the selected state shows a check and the secondary container. */
+.m3-chip[aria-pressed="true"] {
+    padding-inline-start: 0.5rem;
+    border-color: transparent;
+    background-color: var(--color-secondary-container);
+    color: var(--color-on-secondary-container);
+}
+
+.m3-chip[aria-pressed="true"] .m3-chip__icon {
+    display: block;
+}
+
+/* Tags inside a post card are labels, not controls. */
+.m3-chip--static {
+    min-height: 1.5rem;
+    padding-inline: 0.5rem;
+    border-color: var(--color-outline-variant);
+    cursor: inherit;
+    @apply text-label-medium;
+}
+
+.m3-chip--static::before {
+    content: none;
+}
+
+/* Lists ------------------------------------------------------------------ */
+
+.m3-list-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+    padding: 0.75rem 1rem;
+    color: var(--color-on-surface);
+    text-decoration: none;
+}
+
+.m3-list-item__leading {
+    display: grid;
+    flex: none;
+    place-items: center;
+    width: 2.5rem;
+    height: 2.5rem;
+    border-radius: 9999px;
+    background-color: var(--color-secondary-container);
+    color: var(--color-on-secondary-container);
+}
+
+.m3-list-item__leading > svg {
+    width: 1.5rem;
+    height: 1.5rem;
+}
+
+.m3-list-item__body {
+    display: flex;
+    flex-direction: column;
+    gap: 0.125rem;
+    min-width: 0;
+}
+
+/* Search bar (opens the search view) ---------------------------------------- */
+
+.m3-search-bar {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    width: 100%;
+    max-width: 40rem;
+    min-height: 3.5rem;
+    padding-inline: 1rem;
+    border-radius: 9999px;
+    background-color: var(--color-surface-container-high);
+    box-shadow: var(--shadow-elevation-1);
+    color: var(--color-on-surface-variant);
+    cursor: pointer;
+    text-align: start;
+    @apply text-body-large;
+}
+
+.m3-search-bar > svg {
+    flex: none;
+    width: 1.5rem;
+    height: 1.5rem;
+    color: var(--color-on-surface);
+}
+
+/* Small helpers -------------------------------------------------------------- */
+
+.m3-code-chip {
+    padding: 0.25rem 0.75rem;
+    border-radius: var(--radius-sm);
+    background-color: var(--color-surface-container-highest);
+    color: var(--color-on-surface-variant);
+    font-family: var(--font-mono);
+    @apply text-body-medium;
+}
+
+.m3-skip-link {
+    position: fixed;
+    inset-block-start: 0.75rem;
+    inset-inline-start: 0.75rem;
+    z-index: 60;
+    padding: 0.625rem 1.5rem;
+    border-radius: 9999px;
+    background-color: var(--color-primary);
+    box-shadow: var(--shadow-elevation-3);
+    color: var(--color-on-primary);
+    text-decoration: none;
+    transform: translateY(-200%);
+    @apply text-label-large;
+}
+
+.m3-skip-link:focus {
+    transform: none;
+}

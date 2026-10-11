@@ -1,57 +1,62 @@
 ---
-import "../assets/NavBar.css";
+import { Icon } from "astro-icon/components";
+
+const decode = (segment: string): string => {
+    try {
+        return decodeURIComponent(segment);
+    } catch {
+        return segment;
+    }
+};
+
+const segments = Astro.url.pathname.split("/").filter(Boolean);
+const crumbs = segments.map((segment, index) => ({
+    label: decode(segment),
+    href: `/${segments.slice(0, index + 1).join("/")}/`,
+}));
+const isHome = crumbs.length === 0;
 ---
 
-<nav
-    id="breadcrumb-root"
-    class="breadcrumb fixed left-3 top-3 z-50 max-w-[calc(100vw-6.5rem)] sm:left-4 sm:top-4 sm:max-w-[calc(100vw-2rem)]"
-    aria-label="面包屑导航"
->
+<nav class="m3-breadcrumb" aria-label="面包屑导航">
+    <ol class="m3-breadcrumb__list">
+        <li>
+            {
+                isHome ? (
+                    <span class="m3-breadcrumb__current" aria-current="page">
+                        <Icon name="material-symbols:home-rounded" aria-hidden="true" />
+                        June_qwq
+                    </span>
+                ) : (
+                    <a class="m3-icon-button" href="/" aria-label="首页">
+                        <Icon name="material-symbols:home-outline-rounded" aria-hidden="true" />
+                    </a>
+                )
+            }
+        </li>
+        {
+            crumbs.map((crumb, index) => (
+                <li>
+                    <Icon class="m3-breadcrumb__sep" name="material-symbols:chevron-right-rounded" aria-hidden="true" />
+                    {index === crumbs.length - 1 ? (
+                        <span class="m3-breadcrumb__current" aria-current="page">
+                            {crumb.label}
+                        </span>
+                    ) : (
+                        <a class="m3-breadcrumb__link" href={crumb.href}>
+                            {crumb.label}
+                        </a>
+                    )}
+                </li>
+            ))
+        }
+    </ol>
 </nav>
 
-<script is:inline>
-    const root = document.getElementById("breadcrumb-root");
+<script>
+    // Long slugs overflow on phones; keep the current page in view.
+    const list = document.querySelector<HTMLElement>(".m3-breadcrumb__list");
 
-    if (root) {
-        const pathname = window.location.pathname;
-        const parts = pathname.split("/").filter(Boolean);
-
-        const crumbs = [{ label: "/", href: "/" }];
-        let path = "";
-
-        for (const part of parts) {
-            path += `/${part}`;
-            crumbs.push({
-                label: decodeURIComponent(part),
-                href: `${path}/`,
-            });
-        }
-
-        const wrapper = document.createElement("div");
-        wrapper.className = "breadcrumbs rounded-box bg-base-100/80 px-3 py-2 text-sm shadow-sm backdrop-blur";
-
-        const list = document.createElement("ul");
-        list.className = "text-sm flex-nowrap";
-
-        crumbs.forEach((crumb, index) => {
-            const li = document.createElement("li");
-            if (index === crumbs.length - 1) {
-                const span = document.createElement("span");
-                span.className = "opacity-70";
-                span.setAttribute("aria-current", "page");
-                span.textContent = crumb.label;
-                li.append(span);
-            } else {
-                const a = document.createElement("a");
-                a.className = "link link-hover";
-                a.href = crumb.href;
-                a.textContent = crumb.label;
-                li.append(a);
-            }
-            list.append(li);
-        });
-
-        wrapper.append(list);
-        root.replaceChildren(wrapper);
+    if (list) {
+        list.scrollLeft = list.scrollWidth;
     }
 </script>

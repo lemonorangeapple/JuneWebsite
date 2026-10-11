@@ -1,26 +1,108 @@
-.breadcrumb {
-    display: block;
-    max-width: calc(100vw - 6.5rem);
+/* Top app bar: sits on the surface and shifts to surface-container once the page scrolls. */
+.m3-top-app-bar {
+    position: sticky;
+    inset-block-start: 0;
+    z-index: 40;
+    background-color: var(--color-surface);
+    transition: background-color 200ms var(--ease-standard);
 }
 
-.breadcrumb .link {
-    color: var(--color-base-content);
-    text-decoration: none;
+.m3-top-app-bar[data-scrolled] {
+    background-color: var(--color-surface-container);
 }
 
-.breadcrumb .link:hover {
-    text-decoration: underline;
+.m3-top-app-bar__inner {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    max-width: 64rem;
+    min-height: var(--top-app-bar-height);
+    margin-inline: auto;
+    padding-inline: 0.5rem;
 }
 
-.breadcrumb .breadcrumbs {
-    overflow-x: auto;
-    white-space: nowrap;
-    max-width: 100%;
-    -webkit-overflow-scrolling: touch;
-}
-
-@media (min-width: 640px) {
-    .breadcrumb {
-        max-width: calc(100vw - 2rem);
+@media (min-width: 40rem) {
+    .m3-top-app-bar__inner {
+        padding-inline: 1rem;
     }
+}
+
+/* Breadcrumb: M3 has no breadcrumb, so it is built from the app bar's title and icon-button parts. */
+.m3-breadcrumb {
+    flex: 1;
+    min-width: 0;
+}
+
+.m3-breadcrumb__list {
+    display: flex;
+    align-items: center;
+    margin: 0;
+    padding: 0;
+    overflow-x: auto;
+    list-style: none;
+    scrollbar-width: none;
+    white-space: nowrap;
+}
+
+.m3-breadcrumb__list::-webkit-scrollbar {
+    display: none;
+}
+
+.m3-breadcrumb__list > li {
+    display: flex;
+    flex: none;
+    align-items: center;
+}
+
+/* The list scrolls, so keep the ring inside the link instead of letting it be clipped. */
+.m3-breadcrumb :focus-visible {
+    outline-offset: -3px;
+}
+
+.m3-breadcrumb__sep {
+    flex: none;
+    width: 1.25rem;
+    height: 1.25rem;
+    color: var(--color-outline);
+}
+
+.m3-breadcrumb__link {
+    display: inline-flex;
+    align-items: center;
+    min-height: 2.5rem;
+    padding-inline: 0.75rem;
+    border-radius: 9999px;
+    color: var(--color-on-surface-variant);
+    text-decoration: none;
+    @apply text-title-small;
+}
+
+.m3-breadcrumb__current {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    min-height: 2.5rem;
+    padding-inline: 0.75rem;
+    color: var(--color-on-surface);
+    @apply text-title-medium;
+}
+
+.m3-breadcrumb__current > svg {
+    flex: none;
+    width: 1.5rem;
+    height: 1.5rem;
+    color: var(--color-primary);
+}
+
+/* Theme toggle shows the icon of the current theme. */
+.m3-theme-icon--dark {
+    display: none;
+}
+
+:root[data-theme="dark"] .m3-theme-icon--light {
+    display: none;
+}
+
+:root[data-theme="dark"] .m3-theme-icon--dark {
+    display: block;
 }

@@ -1,13 +1,12 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
-import "../assets/index.css";
 import { Icon } from 'astro-icon/components';
 import Card from "../components/Card.astro";
 ---
 
 <BaseLayout title="June_qwq" description="June_qwq 的个人博客，记录全栈开发、基础运维与信奥学习笔记。">
-    <Card>
-        <div class="center">
+    <Card variant="filled">
+        <div class="flex flex-col items-center gap-3 text-center">
             <img
                 src="https://dl.imjcj.eu.org/avatar.xmini.jpg"
                 width="64"
@@ -15,15 +14,13 @@ import Card from "../components/Card.astro";
                 id="avatar"
                 alt="June_qwq 的头像"
             />
-            <h1 class="mt-1">June_qwq</h1>
-            <p class="slogan mt-2"><code class="center">(self || self = new Self())</code></p>
-            <p class="mt-2">熟悉全栈开发、基础运维、C++数据结构、Qt开发等</p>
+            <h1 class="mt-2 text-headline-large text-on-surface sm:text-display-small">June_qwq</h1>
+            <code class="m3-code-chip">(self || self = new Self())</code>
+            <p class="text-body-large text-on-surface-variant">熟悉全栈开发、基础运维、C++数据结构、Qt开发等</p>
         </div>
-        <div class="center">
-            <div class="grid w-full max-w-sm grid-cols-1 gap-3 sm:grid-cols-2">
-                <a class="btn btn-outline" href="https://github.com/lemonorangeapple"><Icon name="mdi:github" />Github</a>
-                <a class="btn btn-outline" href="https://space.bilibili.com/1036201235"><Icon name="mingcute:bilibili-line" />Bilibili</a>
-            </div>
+        <div class="flex flex-wrap justify-center gap-3">
+            <a class="m3-button m3-button--filled" href="https://github.com/lemonorangeapple"><Icon name="mdi:github" aria-hidden="true" />Github</a>
+            <a class="m3-button m3-button--tonal" href="https://space.bilibili.com/1036201235"><Icon name="mingcute:bilibili-line" aria-hidden="true" />Bilibili</a>
         </div>
         <script is:inline>
             const box = document.getElementById("avatar");
@@ -58,19 +55,16 @@ import Card from "../components/Card.astro";
         </script>
     </Card>
 
-    <Card>
-        <div class="center">
-            <div class="btn-list grid w-full grid-cols-1 gap-3 sm:grid-cols-3">
-                <a class="btn btn-outline" href="/posts"><Icon name="material-symbols:article-outline" />文章总览</a>
-                <a class="btn btn-outline" href="/posts/tags"><Icon name="mdi:tag-outline" />文章标签</a>
-                <a class="btn btn-outline" href="/posts/topic"><Icon name="material-symbols:menu-rounded" />文章专栏</a>
-            </div>
-            <div class="btn-list mt-5 grid w-full grid-cols-2 gap-3 sm:grid-cols-4">
-                <a class="btn btn-outline" href="https://dl.imjcj.eu.org/"><Icon name="material-symbols:folder-outline-rounded" />文件下载</a>
-                <a class="btn btn-outline" href="https://random.imjcj.eu.org/"><Icon name="mdi:account" />学号抽选</a>
-                <a class="btn btn-outline" href="https://cd.imjcj.eu.org/"><Icon name="material-symbols:calendar-today-outline-rounded" />节日计时</a>
-                <a class="btn btn-outline" href="https://up.imjcj.eu.org/share/3ePj6A55BwW8hpId"><Icon name="mdi:graph-box-outline" />统计观察</a>
-            </div>
-        </div>
-    </Card>
+    <div class="grid grid-cols-1 gap-3 sm:grid-cols-3">
+        <a class="m3-card m3-card--elevated m3-card--interactive m3-destination" href="/posts"><Icon name="material-symbols:article-outline-rounded" aria-hidden="true" />文章总览</a>
+        <a class="m3-card m3-card--elevated m3-card--interactive m3-destination" href="/posts/tags"><Icon name="material-symbols:label-outline-rounded" aria-hidden="true" />文章标签</a>
+        <a class="m3-card m3-card--elevated m3-card--interactive m3-destination" href="/posts/topic"><Icon name="material-symbols:collections-bookmark-outline-rounded" aria-hidden="true" />文章专栏</a>
+    </div>
+
+    <div class="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
+        <a class="m3-card m3-card--outlined m3-card--interactive m3-destination" href="https://dl.imjcj.eu.org/"><Icon name="material-symbols:folder-outline-rounded" aria-hidden="true" />文件下载</a>
+        <a class="m3-card m3-card--outlined m3-card--interactive m3-destination" href="https://random.imjcj.eu.org/"><Icon name="material-symbols:person-outline-rounded" aria-hidden="true" />学号抽选</a>
+        <a class="m3-card m3-card--outlined m3-card--interactive m3-destination" href="https://cd.imjcj.eu.org/"><Icon name="material-symbols:calendar-today-outline-rounded" aria-hidden="true" />节日计时</a>
+        <a class="m3-card m3-card--outlined m3-card--interactive m3-destination" href="https://up.imjcj.eu.org/share/3ePj6A55BwW8hpId"><Icon name="material-symbols:monitoring-rounded" aria-hidden="true" />统计观察</a>
+    </div>
 </BaseLayout>
