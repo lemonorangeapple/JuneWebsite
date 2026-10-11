@@ -1,18 +1,49 @@
-.post {
-    color: var(--color-base-content);
-    text-decoration: none;
+.m3-post-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 1rem;
 }
 
-.list-btn:hover {
-    border-color: var(--color-base-content);
-    cursor: pointer;
+@media (min-width: 40rem) {
+    .m3-post-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
 }
 
-.list-btn-active {
-    color: var(--color-base-100);
-    background-color: var(--color-base-content);
+@media (min-width: 64rem) {
+    .m3-post-grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
 }
 
-.list-post:hover {
-    border-color: var(--color-base-content);
+.m3-post-card {
+    gap: 0.5rem;
+    padding: 1rem 1.25rem 1.25rem;
+}
+
+.m3-post-card__meta {
+    color: var(--color-on-surface-variant);
+    @apply text-label-medium;
+}
+
+.m3-post-card__title {
+    color: var(--color-on-surface);
+    @apply text-title-large;
+}
+
+.m3-post-card__description {
+    display: -webkit-box;
+    overflow: hidden;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 3;
+    line-clamp: 3;
+    color: var(--color-on-surface-variant);
+    @apply text-body-medium;
+}
+
+.m3-post-card__tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-top: 0.25rem;
 }

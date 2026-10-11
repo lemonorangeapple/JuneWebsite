@@ -18,6 +18,8 @@
     "@astrojs/markdown-remark": "^7.3.2",
     "@astrojs/rss": "^4.0.19",
     "@astrojs/sitemap": "^3.7.4",
+    "@fontsource-variable/roboto": "^5.3.0",
+    "@fontsource-variable/roboto-mono": "^5.3.0",
     "@iconify-json/material-symbols": "^1.2.83",
     "@iconify-json/mdi": "^1.2.3",
     "@iconify-json/mingcute": "^1.2.7",
@@ -25,7 +27,6 @@
     "@waline/client": "^3.16.0",
     "astro": "^7.3.6",
     "astro-icon": "^1.2.0",
-    "daisyui": "^5.6.7",
     "katex": "^0.19.0",
     "remark-breaks": "^4.0.0",
     "tailwindcss": "^4.3.2"

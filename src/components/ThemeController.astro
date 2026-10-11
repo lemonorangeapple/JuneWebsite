@@ -1,61 +1,58 @@
 ---
-import { Icon } from 'astro-icon/components';
+import { Icon } from "astro-icon/components";
 ---
 
-<label
-    class="swap swap-rotate fixed right-3 top-3 z-50 rounded-box bg-base-100/80 px-3 py-3 text-sm shadow-sm backdrop-blur transition-transform duration-200 active:scale-95 sm:right-4 sm:top-4"
-    aria-label="切换主题"
+<button
+    id="theme-toggle"
+    type="button"
+    class="m3-icon-button"
+    aria-label="深色模式"
+    aria-pressed="false"
     title="切换主题"
 >
-    <input id="theme-controller" type="checkbox" />
-
-    <Icon class="swap-on h-6 w-6 fill-current" name="material-symbols:sunny-outline-rounded" />
-
-    <Icon class="swap-off h-6 w-6 fill-current" name="mdi:moon-and-stars" />
-</label>
+    <Icon class="m3-theme-icon--light" name="material-symbols:light-mode-outline-rounded" aria-hidden="true" />
+    <Icon class="m3-theme-icon--dark" name="material-symbols:dark-mode-outline-rounded" aria-hidden="true" />
+</button>
 
 <script is:inline>
     const storageKey = "theme";
-    const checkbox = document.getElementById("theme-controller");
+    const button = document.getElementById("theme-toggle");
 
     const getSavedTheme = () => {
         try {
-            return localStorage.getItem(storageKey);
+            const saved = localStorage.getItem(storageKey);
+            return saved === "light" || saved === "dark" ? saved : null;
         } catch {
             return null;
         }
     };
 
-    if (checkbox instanceof HTMLInputElement) {
-        const savedTheme = getSavedTheme();
+    if (button) {
         const root = document.documentElement;
-        const systemTheme = window.matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark";
-        const theme = savedTheme === "light" || savedTheme === "dark" ? savedTheme : systemTheme;
+        const preferLight = window.matchMedia("(prefers-color-scheme: light)");
 
-        checkbox.checked = theme === "light";
-        root.setAttribute("data-theme", theme);
-
-        const applyTheme = () => {
-            const selectedTheme = checkbox.checked ? "light" : "dark";
-            root.setAttribute("data-theme", selectedTheme);
-
-            try {
-                localStorage.setItem(storageKey, selectedTheme);
-            } catch {
-                return;
-            }
+        const applyTheme = (theme) => {
+            root.setAttribute("data-theme", theme);
+            button.setAttribute("aria-pressed", String(theme === "dark"));
         };
 
-        checkbox.addEventListener("change", applyTheme);
+        applyTheme(getSavedTheme() ?? (preferLight.matches ? "light" : "dark"));
 
-        window.matchMedia("(prefers-color-scheme: light)").addEventListener("change", (event) => {
-            if (getSavedTheme()) {
-                return;
+        button.addEventListener("click", () => {
+            const next = root.getAttribute("data-theme") === "dark" ? "light" : "dark";
+            applyTheme(next);
+
+            try {
+                localStorage.setItem(storageKey, next);
+            } catch {
+                // Storage can be blocked; the choice then only lasts for this page view.
             }
+        });
 
-            const selectedTheme = event.matches ? "light" : "dark";
-            checkbox.checked = selectedTheme === "light";
-            root.setAttribute("data-theme", selectedTheme);
+        preferLight.addEventListener("change", (event) => {
+            if (!getSavedTheme()) {
+                applyTheme(event.matches ? "light" : "dark");
+            }
         });
     }
 </script>

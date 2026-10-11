@@ -1,43 +1,32 @@
 ---
 import BaseLayout from "../../layouts/BaseLayout.astro";
-import "../../assets/PostList.css";
-import Card from "../../components/Card.astro";
 import PostCard from "../../components/PostCard.astro";
+import { Icon } from 'astro-icon/components';
 import { posts } from "../../data/posts";
 
 const topics = [...new Set(posts.map((post) => post.topic).filter(Boolean))].sort((a, b) => a.localeCompare(b));
 ---
 
 <BaseLayout title="文章专栏" description="按专栏浏览 June_qwq 的文章。">
-    <Card>
-        <h1 class="card-title">文章专栏</h1>
-        <div class="mb-6 flex flex-wrap gap-2">
-            <button
-                type="button"
-                data-topic="all"
-                aria-pressed="true"
-                class="rounded-full border border-white list-btn list-btn-active px-4 py-2 text-sm transition"
-            >
-                全部
+    <header class="flex flex-col gap-4">
+        <h1 class="text-headline-medium text-on-surface sm:text-headline-large">文章专栏</h1>
+        <div class="flex flex-wrap gap-2">
+            <button type="button" data-topic="all" aria-pressed="true" class="m3-chip">
+                <Icon class="m3-chip__icon" name="material-symbols:check-rounded" aria-hidden="true" />全部
             </button>
             {topics.map((topic) => (
-                <button
-                    type="button"
-                    data-topic={topic}
-                    aria-pressed="false"
-                    class="rounded-full list-btn border border-base-content/10 px-4 py-2 text-sm transition"
-                >
-                    {topic}
+                <button type="button" data-topic={topic} aria-pressed="false" class="m3-chip">
+                    <Icon class="m3-chip__icon" name="material-symbols:check-rounded" aria-hidden="true" />{topic}
                 </button>
             ))}
         </div>
-        <div id="topic-summary" class="mb-4 text-sm opacity-70" role="status" aria-live="polite"></div>
-        <div class="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
-            {posts.map((post) => (
-                <PostCard post={post} showTopic attrs={{ "data-post-topic": post.topic }} />
-            ))}
-        </div>
-    </Card>
+        <div id="topic-summary" class="text-body-medium text-on-surface-variant" role="status" aria-live="polite"></div>
+    </header>
+    <div class="m3-post-grid">
+        {posts.map((post) => (
+            <PostCard post={post} showTopic attrs={{ "data-post-topic": post.topic }} />
+        ))}
+    </div>
     <script>
         import { initPostFilter } from "../../scripts/postFilter";
 
@@ -47,7 +36,6 @@ const topics = [...new Set(posts.map((post) => post.topic).filter(Boolean))].sor
             summaryId: "topic-summary",
             noun: "主题",
             matchMode: "equals",
-            hoverClass: "hover:border-primary",
         });
     </script>
 </BaseLayout>

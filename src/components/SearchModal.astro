@@ -1,38 +1,34 @@
 ---
-import "../assets/SearchModal.css";
-import "../assets/PostList.css";
+import { Icon } from "astro-icon/components";
 ---
 
-<dialog id="search_modal" class="modal" aria-labelledby="search_title">
-    <div class="modal-box flex h-5/8 max-w-2xl flex-col overflow-hidden rounded-xl">
-        <div class="shrink-0 pb-1">
-            <form method="dialog" class="flex items-center justify-between gap-3">
-                <h2 id="search_title" class="text-lg font-semibold">搜索文章</h2>
-                <button
-                    type="submit"
-                    class="rounded-lg border border-base-content/20 px-3 py-2 text-sm hover:border-base-content"
-                >
-                    关闭
-                </button>
-            </form>
-            <label for="search_input" class="sr-only">搜索文章内容、标签或专栏</label>
-            <input
-                id="search_input"
-                type="search"
-                class="input mt-4 w-full rounded-xl"
-                placeholder="搜索文章内容、标签、专栏等"
-                autocomplete="off"
-                aria-controls="search_results"
-            />
-        </div>
-        <div id="search_div" class="min-h-0 flex-1 overflow-y-auto">
-            <p id="search_status" class="sr-only" aria-live="polite"></p>
-            <div id="search_results" class="mt-4 grid gap-3"></div>
-        </div>
+<dialog id="search_modal" class="m3-search-view" aria-labelledby="search_title">
+    <h2 id="search_title" class="sr-only">搜索文章</h2>
+    <div class="m3-search-view__header">
+        <button id="search_close" type="button" class="m3-icon-button" aria-label="关闭搜索">
+            <Icon name="material-symbols:arrow-back-rounded" aria-hidden="true" />
+        </button>
+        <label for="search_input" class="sr-only">搜索文章内容、标签或专栏</label>
+        <input
+            id="search_input"
+            type="search"
+            class="m3-search-view__input"
+            placeholder="搜索文章内容、标签、专栏等"
+            autocomplete="off"
+            enterkeyhint="search"
+            aria-controls="search_results"
+        />
+        <button id="search_clear" type="button" class="m3-icon-button" aria-label="清除搜索内容" hidden>
+            <Icon name="material-symbols:close-rounded" aria-hidden="true" />
+        </button>
     </div>
-    <form method="dialog" class="modal-backdrop">
-        <button aria-label="关闭搜索">关闭</button>
-    </form>
+    <div id="search_div" class="m3-search-view__results">
+        <p id="search_status" class="sr-only" aria-live="polite"></p>
+        <div id="search_results"></div>
+    </div>
+    <template id="search_result_icon">
+        <Icon name="material-symbols:article-outline-rounded" aria-hidden="true" />
+    </template>
 </dialog>
 
 <script>
@@ -48,13 +44,18 @@ import "../assets/PostList.css";
     const modal = document.getElementById("search_modal");
     const trigger = document.getElementById("search-trigger");
     const input = document.getElementById("search_input");
+    const closeButton = document.getElementById("search_close");
+    const clearButton = document.getElementById("search_clear");
     const results = document.getElementById("search_results");
     const status = document.getElementById("search_status");
+    const iconTemplate = document.getElementById("search_result_icon");
 
     if (
         modal instanceof HTMLDialogElement &&
         trigger instanceof HTMLButtonElement &&
         input instanceof HTMLInputElement &&
+        closeButton instanceof HTMLButtonElement &&
+        clearButton instanceof HTMLButtonElement &&
         results instanceof HTMLElement &&
         status instanceof HTMLElement
     ) {
@@ -80,28 +81,48 @@ import "../assets/PostList.css";
             return postsCache;
         };
 
+        const createMessage = (text: string, isError = false): HTMLDivElement => {
+            const message = document.createElement("div");
+            message.className = isError
+                ? "m3-search-view__message m3-search-view__message--error"
+                : "m3-search-view__message";
+            message.textContent = text;
+            return message;
+        };
+
         const createResult = (post: SearchPost): HTMLAnchorElement => {
             const link = document.createElement("a");
             link.href = post.url;
-            link.className = "post list-post rounded-xl border border-base-content/10 p-3 transition hover:shadow-md";
+            link.className = "m3-list-item";
 
-            const topic = document.createElement("div");
-            topic.className = "text-sm opacity-70";
-            topic.textContent = post.topic || "文章";
-
-            const title = document.createElement("div");
-            title.className = "mt-1 font-semibold";
-            title.textContent = post.title;
-
-            link.append(topic, title);
-
-            if (post.description) {
-                const description = document.createElement("div");
-                description.className = "mt-1 line-clamp-2 text-sm opacity-75";
-                description.textContent = post.description;
-                link.append(description);
+            const leading = document.createElement("span");
+            leading.className = "m3-list-item__leading";
+            leading.setAttribute("aria-hidden", "true");
+            if (iconTemplate instanceof HTMLTemplateElement) {
+                leading.append(iconTemplate.content.cloneNode(true));
             }
 
+            const body = document.createElement("span");
+            body.className = "m3-list-item__body";
+
+            const topic = document.createElement("span");
+            topic.className = "text-label-medium text-on-surface-variant";
+            topic.textContent = post.topic || "文章";
+
+            const title = document.createElement("span");
+            title.className = "text-title-medium";
+            title.textContent = post.title;
+
+            body.append(topic, title);
+
+            if (post.description) {
+                const description = document.createElement("span");
+                description.className = "line-clamp-2 text-body-medium text-on-surface-variant";
+                description.textContent = post.description;
+                body.append(description);
+            }
+
+            link.append(leading, body);
             return link;
         };
 
@@ -130,30 +151,46 @@ import "../assets/PostList.css";
                     results.replaceChildren(...matched.map(createResult));
                     status.textContent = `找到 ${matched.length} 篇文章`;
                 } else {
-                    const empty = document.createElement("div");
-                    empty.className = "py-8 text-center text-sm opacity-70";
-                    empty.textContent = "无结果";
-                    results.replaceChildren(empty);
+                    results.replaceChildren(createMessage("无结果"));
                     status.textContent = "没有找到相关文章";
                 }
             } catch (error) {
                 console.error(error);
-                const failure = document.createElement("div");
-                failure.className = "py-8 text-center text-sm text-error";
-                failure.textContent = "搜索数据加载失败，请稍后重试";
+                const failure = createMessage("搜索数据加载失败，请稍后重试", true);
                 results.replaceChildren(failure);
                 status.textContent = failure.textContent;
             }
         };
 
-        input.addEventListener("input", () => {
+        const scheduleRender = (): void => {
             clearTimeout(timer);
             timer = setTimeout(() => void renderResults(input.value), 150);
+        };
+
+        input.addEventListener("input", () => {
+            clearButton.hidden = input.value === "";
+            scheduleRender();
         });
 
         input.addEventListener("keydown", (event) => {
             if (event.key === "Escape") {
                 event.preventDefault();
+                modal.close();
+            }
+        });
+
+        clearButton.addEventListener("click", () => {
+            input.value = "";
+            clearButton.hidden = true;
+            input.focus();
+            scheduleRender();
+        });
+
+        closeButton.addEventListener("click", () => modal.close());
+
+        // Clicks on the backdrop are dispatched to the dialog itself; clicks inside the view always hit a child.
+        modal.addEventListener("click", (event) => {
+            if (event.target === modal) {
                 modal.close();
             }
         });
@@ -165,7 +202,9 @@ import "../assets/PostList.css";
         });
 
         modal.addEventListener("close", () => {
+            clearTimeout(timer);
             input.value = "";
+            clearButton.hidden = true;
             renderVersion += 1;
             results.replaceChildren();
             status.textContent = "";

@@ -1,14 +1,29 @@
-.slogan {
-    font-size: small;
-    color: var(--color-base-content);
-}
-
 #avatar {
-    border-radius: 100%;
+    width: 5rem;
+    height: 5rem;
     margin-inline: auto;
+    border-radius: 9999px;
+    box-shadow: 0 0 0 4px var(--color-primary-container);
+    object-fit: cover;
 }
 
 #avatar:hover {
     cursor: pointer;
     will-change: transform;
+}
+
+/* Destination cards on the home page: a tonal icon next to the label. */
+.m3-destination {
+    flex-direction: row;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem 1.25rem;
+    @apply text-title-medium;
+}
+
+.m3-destination > svg {
+    flex: none;
+    width: 1.5rem;
+    height: 1.5rem;
+    color: var(--color-primary);
 }

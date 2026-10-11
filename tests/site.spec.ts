@@ -40,7 +40,7 @@ test("pages expose the expected document landmarks", async ({ page }) => {
 test("search is keyboard accessible and searches article bodies", async ({ page }) => {
     await page.goto("/posts/");
 
-    const trigger = page.getByRole("button", { name: "文章搜索" });
+    const trigger = page.getByRole("button", { name: "搜索文章" });
     await trigger.focus();
     await expect(trigger).toBeFocused();
     await page.keyboard.press("Enter");
@@ -63,7 +63,7 @@ test("search is keyboard accessible and searches article bodies", async ({ page 
 
 test("search results do not overlap the search input", async ({ page }) => {
     await page.goto("/posts/");
-    await page.getByRole("button", { name: "文章搜索" }).click();
+    await page.getByRole("button", { name: "搜索文章" }).click();
     await expect(page.locator("#search_results a").first()).toBeVisible();
 
     // Read both rects in one frame: the dialog is still animating when it opens.
@@ -73,6 +73,58 @@ test("search results do not overlap the search input", async ({ page }) => {
         return results.top - input.bottom;
     });
     expect(gap).toBeGreaterThanOrEqual(0);
+});
+
+test("search view can be closed from its controls and cleared", async ({ page }) => {
+    await page.goto("/posts/");
+    const trigger = page.getByRole("button", { name: "搜索文章" });
+    const dialog = page.getByRole("dialog", { name: "搜索文章" });
+    const input = page.getByRole("searchbox", { name: "搜索文章内容、标签或专栏" });
+    const clear = page.getByRole("button", { name: "清除搜索内容" });
+
+    await trigger.click();
+    await expect(clear).toBeHidden();
+    await input.fill("FastMCP");
+    await expect(clear).toBeVisible();
+    await clear.click();
+    await expect(input).toHaveValue("");
+    await expect(input).toBeFocused();
+    await expect(clear).toBeHidden();
+
+    await page.getByRole("button", { name: "关闭搜索" }).click();
+    await expect(dialog).toBeHidden();
+    await expect(trigger).toBeFocused();
+
+    // Outside the docked view (desktop) the backdrop closes it too; on phones the view is full screen.
+    if ((page.viewportSize()?.width ?? 0) >= 640) {
+        await trigger.click();
+        await expect(dialog).toBeVisible();
+        await page.mouse.click(8, 500);
+        await expect(dialog).toBeHidden();
+    }
+});
+
+test("theme toggle switches, persists and reflects its state", async ({ page }) => {
+    await page.emulateMedia({ colorScheme: "light" });
+    await page.goto("/");
+    const toggle = page.getByRole("button", { name: "深色模式" });
+    const root = page.locator("html");
+
+    await expect(root).toHaveAttribute("data-theme", "light");
+    await expect(toggle).toHaveAttribute("aria-pressed", "false");
+
+    await toggle.click();
+    await expect(root).toHaveAttribute("data-theme", "dark");
+    await expect(toggle).toHaveAttribute("aria-pressed", "true");
+    const surface = await page.evaluate(() => getComputedStyle(document.body).backgroundColor);
+    expect(surface).toBe("rgb(20, 18, 24)");
+
+    await page.reload();
+    await expect(root).toHaveAttribute("data-theme", "dark");
+    await expect(page.getByRole("button", { name: "深色模式" })).toHaveAttribute("aria-pressed", "true");
+
+    await page.getByRole("button", { name: "深色模式" }).click();
+    await expect(root).toHaveAttribute("data-theme", "light");
 });
 
 test("post filters expose their active state", async ({ page }) => {

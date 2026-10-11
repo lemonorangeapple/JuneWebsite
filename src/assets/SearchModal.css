@@ -1,13 +1,126 @@
-.modal {
-    border: 0 !important;
+/*
+ * Search view: full screen on compact windows, a docked dialog from 640px up.
+ * Open/close animates with @starting-style, which also covers the top layer.
+ */
+.m3-search-view {
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    max-width: none;
+    height: 100dvh;
+    max-height: none;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    border: 0;
+    border-radius: 0;
+    background-color: var(--color-surface-container-high);
+    color: var(--color-on-surface);
+    opacity: 0;
+    transform: translateY(-1rem);
+    transition:
+        opacity 200ms var(--ease-standard),
+        transform 300ms var(--ease-emphasized-decelerate),
+        overlay 300ms allow-discrete,
+        display 300ms allow-discrete;
 }
 
-#search_input {
-    border: 1px solid var(--color-base-content);
-    background-color: var(--color-base-300);
+.m3-search-view[open] {
+    display: flex;
+    flex-direction: column;
+    opacity: 1;
+    transform: none;
 }
 
-#search_input:focus-visible {
-    outline: 2px solid var(--color-info);
-    outline-offset: 2px;
+@starting-style {
+    .m3-search-view[open] {
+        opacity: 0;
+        transform: translateY(-1rem);
+    }
+}
+
+.m3-search-view::backdrop {
+    background-color: rgb(0 0 0 / 0.32);
+    opacity: 0;
+    transition:
+        opacity 300ms var(--ease-standard),
+        overlay 300ms allow-discrete,
+        display 300ms allow-discrete;
+}
+
+.m3-search-view[open]::backdrop {
+    opacity: 1;
+}
+
+@starting-style {
+    .m3-search-view[open]::backdrop {
+        opacity: 0;
+    }
+}
+
+@media (min-width: 40rem) {
+    .m3-search-view {
+        inset: 4rem 0 auto;
+        width: min(45rem, calc(100% - 3rem));
+        height: min(40rem, calc(100dvh - 8rem));
+        margin-inline: auto;
+        border-radius: var(--radius-xl);
+        box-shadow: var(--shadow-elevation-3);
+    }
+}
+
+.m3-search-view__header {
+    display: flex;
+    flex: none;
+    align-items: center;
+    gap: 0.25rem;
+    min-height: 4.5rem;
+    padding-inline: 0.75rem;
+}
+
+.m3-search-view__input {
+    flex: 1;
+    min-width: 0;
+    height: 3.5rem;
+    padding-inline: 0.5rem;
+    border: 0;
+    background-color: transparent;
+    color: var(--color-on-surface);
+    appearance: none;
+    @apply text-body-large;
+}
+
+/* The caret marks the focus; the whole view is the field. */
+.m3-search-view__input:focus-visible {
+    outline: none;
+}
+
+.m3-search-view__input::placeholder {
+    color: var(--color-on-surface-variant);
+    opacity: 1;
+}
+
+.m3-search-view__input::-webkit-search-cancel-button,
+.m3-search-view__input::-webkit-search-decoration {
+    display: none;
+}
+
+.m3-search-view__results {
+    flex: 1;
+    min-height: 0;
+    padding-block: 0.5rem;
+    overflow-y: auto;
+    border-block-start: 1px solid var(--color-outline-variant);
+    overscroll-behavior: contain;
+}
+
+.m3-search-view__message {
+    padding: 3rem 1rem;
+    color: var(--color-on-surface-variant);
+    text-align: center;
+    @apply text-body-medium;
+}
+
+.m3-search-view__message--error {
+    color: var(--color-error);
 }

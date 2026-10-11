@@ -1,7 +1,5 @@
 ---
 import BaseLayout from "../../layouts/BaseLayout.astro";
-import "../../assets/PostList.css";
-import Card from "../../components/Card.astro";
 import { Icon } from 'astro-icon/components';
 import SearchModal from "../../components/SearchModal.astro";
 import PostCard from "../../components/PostCard.astro";
@@ -9,16 +7,19 @@ import { posts } from "../../data/posts";
 ---
 
 <BaseLayout title="文章总览" description="June_qwq 博客的全部文章列表。">
-    <Card>
-        <h1 class="card-title">文章总览</h1>
-        <div class="grid w-full grid-cols-1 gap-3 sm:w-3/5 sm:grid-cols-3">
-            <a class="btn btn-outline" href="/posts/tags"><Icon name="mdi:tag-outline" />文章标签</a>
-            <a class="btn btn-outline" href="/posts/topic"><Icon name="material-symbols:menu-rounded" />文章专栏</a>
-            <button id="search-trigger" type="button" class="btn btn-outline"><Icon name="material-symbols:search-rounded" />文章搜索</button>
+    <header class="flex flex-col gap-4">
+        <h1 class="text-headline-medium text-on-surface sm:text-headline-large">文章总览</h1>
+        <button id="search-trigger" type="button" class="m3-search-bar" aria-haspopup="dialog">
+            <Icon name="material-symbols:search-rounded" aria-hidden="true" />
+            <span>搜索文章</span>
+        </button>
+        <div class="flex flex-wrap gap-3">
+            <a class="m3-button m3-button--tonal" href="/posts/tags"><Icon name="material-symbols:label-outline-rounded" aria-hidden="true" />文章标签</a>
+            <a class="m3-button m3-button--tonal" href="/posts/topic"><Icon name="material-symbols:collections-bookmark-outline-rounded" aria-hidden="true" />文章专栏</a>
         </div>
-        <SearchModal />
-        <div class="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
-            {posts.map((post) => <PostCard post={post} showTopic />)}
-        </div>
-    </Card>
+    </header>
+    <SearchModal />
+    <div class="m3-post-grid">
+        {posts.map((post) => <PostCard post={post} showTopic />)}
+    </div>
 </BaseLayout>

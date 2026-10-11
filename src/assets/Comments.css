@@ -1,16 +1,55 @@
+/*
+ * Waline ships unlayered CSS, so this file is deliberately not part of the app.css
+ * cascade layers: the #waline selectors below have to out-rank its rules.
+ */
 #waline {
-    --waline-white: var(--color-base-100);
-    --waline-theme-color: var(--color-base-content);
-    --waline-active-color: var(--color-base-content);
-    --waline-border: 1px solid color-mix(in oklab, var(--color-base-content) 20%, transparent);
-    --waline-bg-color: var(--color-base-200);
-    --waline-bg-color-light: var(--color-base-300);
-    --waline-bg-color-hover: var(--color-base-300);
-    --waline-border-color: color-mix(in oklab, var(--color-base-content) 20%, transparent);
-    --waline-color: var(--color-base-content);
-    --waline-info-color: color-mix(in oklab, var(--color-base-content) 78%, var(--color-base-200));
-    --waline-light-grey: color-mix(in oklab, var(--color-base-content) 72%, var(--color-base-200));
-    --waline-dark-grey: color-mix(in oklab, var(--color-base-content) 88%, var(--color-base-200));
-    --waline-disable-bg-color: var(--color-base-300);
-    --waline-disable-color: color-mix(in oklab, var(--color-base-content) 70%, var(--color-base-300));
+    --waline-white: var(--color-on-primary);
+    --waline-theme-color: var(--color-primary);
+    --waline-active-color: color-mix(in oklab, var(--color-primary) 80%, var(--color-on-surface));
+    --waline-color: var(--color-on-surface);
+    --waline-bg-color: var(--color-surface);
+    --waline-bg-color-light: var(--color-surface-container);
+    --waline-bg-color-hover: var(--color-surface-container-high);
+    --waline-border-color: var(--color-outline-variant);
+    --waline-border: 1px solid var(--color-outline-variant);
+    --waline-disable-bg-color: var(--color-surface-container-high);
+    --waline-disable-color: var(--color-on-surface-variant);
+    --waline-bq-color: var(--color-surface-container-highest);
+    --waline-info-bg-color: var(--color-surface-container-high);
+    --waline-info-color: var(--color-on-surface-variant);
+    --waline-light-grey: var(--color-on-surface-variant);
+    --waline-dark-grey: var(--color-on-surface-variant);
+    --waline-badge-color: var(--color-tertiary);
+    font-family: var(--font-sans);
+}
+
+#waline .wl-panel {
+    border-radius: var(--radius-md);
+}
+
+#waline .wl-btn {
+    padding: 0.5em 1.5em;
+    border-color: var(--color-outline);
+    border-radius: 9999px;
+    font-weight: 500;
+}
+
+#waline .wl-btn:not(.primary, :disabled):hover,
+#waline .wl-btn:not(.primary, :disabled):active {
+    background-color: color-mix(in oklab, var(--color-primary) 8%, transparent);
+}
+
+#waline .wl-btn.primary {
+    border-color: transparent;
+}
+
+#waline .wl-btn.primary:hover,
+#waline .wl-btn.primary:active {
+    border-color: transparent;
+    box-shadow: var(--shadow-elevation-1);
+}
+
+#waline .wl-btn:disabled {
+    border-color: transparent;
+    box-shadow: none;
 }

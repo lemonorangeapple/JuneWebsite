@@ -1,0 +1,57 @@
+:root {
+    /* No saved choice and no JS: follow the OS. The head script sets data-theme before first paint. */
+    color-scheme: light dark;
+    accent-color: var(--color-primary);
+    --top-app-bar-height: 4rem;
+}
+
+:root[data-theme="light"] {
+    color-scheme: light;
+}
+
+:root[data-theme="dark"] {
+    color-scheme: dark;
+}
+
+html {
+    background-color: var(--color-surface);
+    scroll-behavior: smooth;
+    scroll-padding-top: calc(var(--top-app-bar-height) + 1rem);
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+}
+
+body {
+    min-height: 100dvh;
+    background-color: var(--color-surface);
+    color: var(--color-on-surface);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    @apply text-body-large;
+}
+
+/* The skip link focuses <main>; it is a target, not a control, so it gets no ring. */
+main:focus {
+    outline: none;
+}
+
+/* M3 focus indicator: 3dp secondary ring, 2dp away from the component. */
+:focus-visible {
+    outline: 3px solid var(--color-secondary);
+    outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    html {
+        scroll-behavior: auto;
+    }
+
+    *,
+    ::before,
+    ::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+}

@@ -1,4 +1,6 @@
 ---
+import "@fontsource-variable/roboto";
+import "@fontsource-variable/roboto-mono";
 import "../assets/app.css";
 import Head from "../components/Head.astro";
 import NavBar from "../components/NavBar.astro";
@@ -20,18 +22,27 @@ const { title, description, type, publishedTime } = Astro.props;
         <Head title={title} description={description} type={type} publishedTime={publishedTime} />
     </head>
     <body>
-        <header>
-            <a
-                href="#main-content"
-                class="sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[60] focus:not-sr-only focus:rounded-lg focus:bg-base-100 focus:px-4 focus:py-2 focus:shadow"
-            >
-                跳至正文
-            </a>
-            <NavBar />
-            <ThemeController />
+        <a href="#main-content" class="m3-skip-link">跳至正文</a>
+        <header class="m3-top-app-bar" data-top-app-bar>
+            <div class="m3-top-app-bar__inner">
+                <NavBar />
+                <ThemeController />
+            </div>
         </header>
-        <main id="main-content" tabindex="-1">
+        <main id="main-content" tabindex="-1" class="mx-auto flex w-full max-w-5xl flex-col gap-6 px-4 pb-16 pt-2 sm:px-6">
             <slot />
         </main>
+        <script>
+            const bar = document.querySelector<HTMLElement>("[data-top-app-bar]");
+
+            if (bar) {
+                const update = (): void => {
+                    bar.toggleAttribute("data-scrolled", window.scrollY > 0);
+                };
+
+                window.addEventListener("scroll", update, { passive: true });
+                update();
+            }
+        </script>
     </body>
 </html>
